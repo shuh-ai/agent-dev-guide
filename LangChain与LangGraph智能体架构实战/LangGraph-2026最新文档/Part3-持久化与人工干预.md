@@ -1,0 +1,1108 @@
+# 持久化与人机交互
+
+> **核心议题**：Checkpointer 状态持久化、Thread 线程隔离、时间旅行、Interrupt 中断挂起、Tool Approval 工具调用审查、State Editing 状态编辑
+> **技术栈**：Python 3.11+ / LangGraph / LangChain Core
+
+---
+
+## 一、持久化（Persistence）核心原理
+
+在构建真实的 Agent 应用时，我们面临一个关键问题：**图执行完毕后，状态就消失了**。这意味着用户无法在第二天继续昨天的对话，也无法在任务中断后从断点恢复。
+
+LangGraph 通过 **Checkpointer（检查点）** 机制完美解决了这个问题。
+
+### 1.1 Checkpointer 工作原理
+
+Checkpointer 的核心职责是：**在每个超级步骤（Super Step）结束后，自动保存图的完整状态快照**。
+
+> **类比理解**：Checkpointer 就像游戏中的"自动存档"功能。每过一关（Super Step），系统自动保存当前进度（State）。即使游戏崩溃（程序中断），玩家也可以从最近的存档点继续，而不需要从头开始。
+
+```mermaid
+graph LR
+    subgraph SuperStep["超级步骤执行"]
+        direction LR
+        S1["步骤 1<br/>节点 A 执行"] --> S2["步骤 2<br/>节点 B 执行"] --> S3["步骤 3<br/>节点 C 执行"]
+    end
+
+    subgraph Checkpoint["自动存档"]
+        direction LR
+        C1["快照 1"] --> C2["快照 2"] --> C3["快照 3"]
+    end
+
+    S1 -.->|Super Step 结束| C1
+    S2 -.->|Super Step 结束| C2
+    S3 -.->|Super Step 结束| C3
+
+    style SuperStep fill:#d6eaf8,stroke:#2980b9
+    style Checkpoint fill:#d5f5e3,stroke:#27ae60
+```
+
+**Checkpointer 存储的数据结构**（`StateSnapshot`）：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `values` | `dict` | 当前状态的实际值 |
+| `config` | `dict` | 该快照对应的配置（含 thread_id） |
+| `metadata` | `dict` | 元数据（来源、步骤号等） |
+| `parent_config` | `dict \| None` | 父快照的配置（用于回溯链） |
+| `next` | `tuple[str, ...]` | 下一步将执行的节点名 |
+| `tasks` | `tuple` | 待执行的任务列表 |
+
+### 1.2 Checkpointer 实现选型
+
+LangGraph 提供了多种 Checkpointer 实现，适用于不同的部署环境：
+
+| 实现 | 存储位置 | 持久性 | 适用场景 |
+|------|----------|--------|----------|
+| `MemorySaver` | 内存（Python 字典） | 进程结束即丢失 | 本地开发、单元测试 |
+| `SqliteSaver` | 本地 SQLite 文件 | 磁盘持久化 | 单机部署、小型应用 |
+| `PostgresSaver` | PostgreSQL 数据库 | 数据库级持久化 | 生产环境、多实例部署 |
+
+```python
+# ==========================================
+# 开发环境：MemorySaver（内存存储）
+# ==========================================
+from langgraph.checkpoint.memory import MemorySaver
+
+memory = MemorySaver()
+graph = builder.compile(checkpointer=memory)
+
+# ==========================================
+# 生产环境：PostgresSaver（数据库存储）
+# ==========================================
+from langgraph.checkpoint.postgres import PostgresSaver
+
+# 连接 PostgreSQL 数据库
+conn_string = "postgresql://user:password@localhost:5432/langgraph_db"
+postgres_saver = PostgresSaver.from_conn_string(conn_string)
+
+# 首次使用需要初始化表结构
+postgres_saver.setup()
+
+graph = builder.compile(checkpointer=postgres_saver)
+```
+
+> **生产环境建议**：`MemorySaver` 仅用于开发测试。生产部署必须使用数据库级持久化，以确保状态在服务重启后仍然可用。
+
+### 1.3 Thread 机制深度解析
+
+每次图的执行都需要一个 **thread_id**，它是状态的命名空间（Namespace）。理解 Thread 机制是正确使用持久化的前提。
+
+**核心规则**：
+- **相同 thread_id** = 同一对话上下文（状态自动衔接）
+- **不同 thread_id** = 全新对话（状态完全隔离）
+
+```mermaid
+graph TB
+    subgraph Thread1["Thread: conversation_1"]
+        direction TB
+        T1S1["状态快照 1<br/>用户: '我叫小明'"] --> T1S2["状态快照 2<br/>用户: '我叫什么？'<br/>AI: '你叫小明'"] --> T1S3["状态快照 3<br/>继续对话..."]
+    end
+
+    subgraph Thread2["Thread: conversation_2"]
+        direction TB
+        T2S1["状态快照 1<br/>用户: '我叫什么？'<br/>AI: '我不知道'"]
+    end
+
+    subgraph Key["thread_id 是访问钥匙"]
+        direction LR
+        K1["thread_id='conversation_1'<br/>→ 访问 Thread 1 的状态"]
+        K2["thread_id='conversation_2'<br/>→ 访问 Thread 2 的状态"]
+    end
+
+    Key --> Thread1
+    Key --> Thread2
+
+    style Thread1 fill:#d6eaf8,stroke:#2980b9
+    style Thread2 fill:#fdebd0,stroke:#e67e22
+    style Key fill:#fef9e7,stroke:#f39c12
+```
+
+**代码示例**：
+
+```python
+from langgraph.graph import StateGraph, START, END, MessagesState
+from langgraph.checkpoint.memory import MemorySaver
+from langchain_core.messages import HumanMessage
+
+
+def chatbot(state: MessagesState) -> dict:
+    """简单的聊天机器人节点"""
+    return {"messages": [("ai", f"你说的是: {state['messages'][-1].content}")]}
+
+
+builder = StateGraph(MessagesState)
+builder.add_node("chatbot", chatbot)
+builder.add_edge(START, "chatbot")
+builder.add_edge("chatbot", END)
+
+graph = builder.compile(checkpointer=MemorySaver())
+
+# ==========================================
+# 线程 1：建立上下文
+# ==========================================
+config_1 = {"configurable": {"thread_id": "conversation_1"}}
+
+graph.invoke({"messages": [HumanMessage(content="嗨，我叫小明")]}, config=config_1)
+
+# 同一线程追问 → AI 记得用户名字
+result = graph.invoke(
+    {"messages": [HumanMessage(content="我叫什么名字？")]},
+    config=config_1
+)
+print(result["messages"][-1].content)  # 输出: 你叫小明
+
+# ==========================================
+# 线程 2：全新对话（无记忆）
+# ==========================================
+config_2 = {"configurable": {"thread_id": "conversation_2"}}
+
+result = graph.invoke(
+    {"messages": [HumanMessage(content="我叫什么名字？")]},
+    config=config_2
+)
+print(result["messages"][-1].content)  # 输出: 你说的是: 我叫什么名字？（无法回答）
+```
+
+### 1.4 状态访问与管理
+
+LangGraph 提供了一组 API 用于读取和管理图的状态：
+
+```python
+config = {"configurable": {"thread_id": "task_1"}}
+
+# ==========================================
+# 1. 获取当前状态快照
+# ==========================================
+current_state = graph.get_state(config)
+print(current_state.values)      # 状态值
+print(current_state.config)      # 该快照的配置
+print(current_state.metadata)    # 元数据
+print(current_state.next)        # 下一步待执行的节点
+
+# ==========================================
+# 2. 获取历史状态链（时间旅行的基础）
+# ==========================================
+all_states = list(graph.get_state_history(config))
+
+# 返回的是一个迭代器，按时间倒序排列
+# all_states[0] = 最新的状态
+# all_states[-1] = 最早的状态（初始状态）
+
+for i, snapshot in enumerate(all_states):
+    print(f"快照 {i}: next={snapshot.next}, values_keys={list(snapshot.values.keys())}")
+
+# ==========================================
+# 3. 回溯到父状态
+# ==========================================
+if len(all_states) > 1:
+    parent_snapshot = all_states[1]  # 上一个状态
+    parent_state = graph.get_state(parent_snapshot.config)
+    print(f"父状态值: {parent_state.values}")
+```
+
+### 1.5 时间旅行（Time Travel）
+
+**时间旅行**是 LangGraph 持久化能力的高级应用：图执行过程中的每一个中间状态都可以被回溯、查看、甚至重放。
+
+> **类比理解**：想象你在玩一个有多个分支的剧情游戏。时间旅行允许你回到任何一个存档点，查看当时的状态，甚至选择不同的分支继续推进。
+
+```mermaid
+graph LR
+    subgraph Timeline["状态演进链"]
+        direction LR
+        S0["初始状态<br/>step=0"] --> S1["AI 初检完成<br/>step=1"] --> S2["人工审核完成<br/>step=2"] --> S3["最终估价<br/>step=3"]
+    end
+
+    subgraph Travel["时间旅行操作"]
+        direction TB
+        T1["查看历史<br/>get_state_history()"]
+        T2["回溯到 step=1<br/>查看 AI 初检结果"]
+        T3["从 step=1 分支<br/>注入不同的人工意见"]
+    end
+
+    Timeline -.-> Travel
+
+    style Timeline fill:#d6eaf8,stroke:#2980b9
+    style Travel fill:#fef9e7,stroke:#f39c12
+```
+
+**时间旅行的实际应用场景**：
+
+| 场景 | 说明 |
+|------|------|
+| **调试** | 回溯到出错前的状态，检查中间变量 |
+| **回放** | 重现 Agent 的完整推理过程 |
+| **分支探索** | 从某个中间状态分叉，尝试不同的决策路径 |
+| **审计** | 查看人工干预前后的状态变化 |
+
+```python
+# ==========================================
+# 时间旅行示例：回溯并分支
+# ==========================================
+
+# 1. 执行图到某个中间状态
+config = {"configurable": {"thread_id": "experiment_1"}}
+graph.invoke({"input": "初始输入"}, config=config)
+
+# 2. 获取历史状态链
+history = list(graph.get_state_history(config))
+
+# 3. 选择一个历史快照进行回溯
+target_snapshot = history[2]  # 回溯到第 2 个快照
+print(f"回溯到: {target_snapshot.values}")
+
+# 4. 从该快照的状态继续执行（分支）
+branch_config = {"configurable": {"thread_id": "experiment_1_branch"}}
+graph.invoke(target_snapshot.values, config=branch_config)
+
+# 5. 对比两条分支的结果
+original_result = graph.get_state(config).values
+branch_result = graph.get_state(branch_config).values
+print(f"原始分支: {original_result}")
+print(f"新分支: {branch_result}")
+```
+
+---
+
+## 二、人机交互（Human-in-the-Loop）
+
+LangGraph 通过 **Interrupt（中断）** 机制实现人机交互，使 Agent 能够在关键决策点暂停执行，等待人类的输入、审查或修正。
+
+### 2.1 HITL 的三种模式概览
+
+```mermaid
+graph TB
+    subgraph HITL["人机交互三种模式"]
+        direction TB
+        M1["模式一：Interrupt 挂起<br/>interrupt() + Command(resume=...)<br/>等待人工补充信息"]
+        M2["模式二：Tool Approval<br/>interrupt_before + stream(None)<br/>审查工具调用参数"]
+        M3["模式三：State Editing<br/>update_state() + as_node<br/>修正 AI 误判"]
+    end
+
+    subgraph API["核心 API"]
+        direction LR
+        A1["interrupt()"]
+        A2["Command(resume=...)"]
+        A3["get_state()"]
+        A4["update_state()"]
+        A5["interrupt_before"]
+        A6["interrupt_after"]
+    end
+
+    M1 --> A1
+    M1 --> A2
+    M2 --> A3
+    M2 --> A5
+    M3 --> A4
+
+    style HITL fill:#f0f6fd,stroke:#3498db
+    style API fill:#fef9e7,stroke:#f39c12
+```
+
+### 2.2 场景一：等待用户输入（Interrupt）
+
+**业务背景**：AI 初检完成后，强制要求人工质检员确认实机细节，才能继续估价。
+
+**核心机制**：
+- `interrupt("提示信息")`：在节点内部调用，暂停图的执行，将提示信息返回给调用方
+- `Command(resume="用户输入")`：恢复执行，将用户输入注入到 `interrupt()` 的返回值
+
+```mermaid
+sequenceDiagram
+    participant User as 调用方
+    participant Graph as 图执行引擎
+    participant Inspector as Inspector 节点
+    participant Human as Human 节点
+    participant Valuer as Valuer 节点
+
+    User->>Graph: invoke({item: "iPhone 15 Pro"}, config)
+    Graph->>Inspector: 执行 AI 初检
+    Inspector-->>Graph: 返回 inspect_report
+    Graph->>Human: 执行人工节点
+    Human->>Graph: interrupt("请求人工介入")
+    Graph-->>User: 暂停，返回 interrupt 事件
+    Note over User: ⏸️ 等待人工输入
+
+    User->>Graph: stream(Command(resume="屏幕有划痕"))
+    Graph->>Human: interrupt() 返回 "屏幕有划痕"
+    Human-->>Graph: 返回 human_feedback
+    Graph->>Valuer: 执行估价
+    Valuer-->>Graph: 返回 final_valuation
+    Graph-->>User: 返回最终结果
+```
+
+**完整代码**：
+
+```python
+import operator
+from typing import Annotated, TypedDict
+from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.types import interrupt, Command
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage
+
+
+# ==========================================
+# 1. 定义状态
+# ==========================================
+
+class AppraiseState(TypedDict):
+    """设备估价流程的状态"""
+    item: str                    # 待估价物品
+    inspect_report: str          # AI 初检报告
+    human_feedback: str          # 人工补充信息
+    final_valuation: str         # 最终估价结果
+
+
+# ==========================================
+# 2. 定义节点
+# ==========================================
+
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+
+
+def inspect_node(state: AppraiseState) -> dict:
+    """AI 初检：分析设备折损"""
+    response = llm.invoke([
+        HumanMessage(content=f"列出二手【{state['item']}】最核心的2个外观折损点，50字以内。")
+    ])
+    return {"inspect_report": response.content}
+
+
+def human_node(state: AppraiseState) -> dict:
+    """
+    人工复核：调用 interrupt() 挂起图执行
+    
+    interrupt() 的工作流程：
+    1. 暂停当前节点的执行
+    2. 将提示信息发送给调用方
+    3. 保存当前状态到 Checkpointer
+    4. 等待 Command(resume=...) 恢复
+    5. resume 的值成为 interrupt() 的返回值
+    """
+    user_input = interrupt("请求人工介入：请提供外观细节")
+    # ↑ 此处暂停，直到收到 Command(resume=...)
+    # user_input 将等于 resume 传入的值
+    
+    return {"human_feedback": user_input}
+
+
+def valuation_node(state: AppraiseState) -> dict:
+    """财务估价：综合 AI 报告和人工意见"""
+    prompt = (
+        f"物品: {state['item']}\n"
+        f"AI报告: {state['inspect_report']}\n"
+        f"人工意见: {state['human_feedback']}\n"
+        f"请给出二手估价区间（单位：元）。"
+    )
+    response = llm.invoke([HumanMessage(content=prompt)])
+    return {"final_valuation": response.content}
+
+
+# ==========================================
+# 3. 构建图
+# ==========================================
+
+builder = StateGraph(AppraiseState)
+builder.add_node("Inspector", inspect_node)
+builder.add_node("Human", human_node)
+builder.add_node("Valuer", valuation_node)
+builder.add_edge(START, "Inspector")
+builder.add_edge("Inspector", "Human")
+builder.add_edge("Human", "Valuer")
+builder.add_edge("Valuer", END)
+
+# 必须配置 Checkpointer 才能使用 interrupt
+app = builder.compile(checkpointer=MemorySaver())
+```
+
+**执行与恢复**：
+
+```python
+# ==========================================
+# 阶段 1：启动自动初检
+# ==========================================
+config = {"configurable": {"thread_id": "task_1"}}
+
+# 使用 stream 可以实时观察执行过程
+events = []
+for event in app.stream(
+    {"item": "iPhone 15 Pro", "inspect_report": "", "human_feedback": "", "final_valuation": ""},
+    config
+):
+    events.append(event)
+    print(f"事件: {event}")
+
+# 执行到 Human 节点时，interrupt() 触发，图自动挂起
+# 此时 events 中包含了 Inspector 节点的输出
+
+# 查看挂起时的状态
+state = app.get_state(config)
+print(f"当前状态: {state.values}")
+print(f"下一步: {state.next}")  # 输出: ('Human',) 表示 Human 节点等待执行
+
+# ==========================================
+# 阶段 2：人工注入数据并恢复执行
+# ==========================================
+
+# Command(resume=...) 的值会成为 interrupt() 的返回值
+resume_cmd = Command(resume="屏幕有轻微划痕，电池健康度88%")
+
+for event in app.stream(resume_cmd, config):
+    print(f"恢复后事件: {event}")
+
+# ==========================================
+# 查看最终结果
+# ==========================================
+final_state = app.get_state(config)
+print(f"最终估价: {final_state.values.get('final_valuation')}")
+```
+
+### 2.3 场景二：审查工具调用（Tool Approval）
+
+**业务背景**：Agent 决定调用外部"全网比价工具"，但在物理发包前，必须由人工审核查询参数，防止敏感信息泄露或无效查询。
+
+**核心机制**：
+- `interrupt_before=["节点名"]`：在指定节点执行前自动挂起
+- `get_state()`：获取挂起时的中间状态，检查工具调用参数
+- `stream(None, config)`：传入 `None` 表示放行，继续执行被拦截的节点
+
+> **interrupt_before vs interrupt_after**：
+> - `interrupt_before`：节点执行前拦截，适合审查/审批场景（先审后执行）
+> - `interrupt_after`：节点执行后拦截，适合结果确认场景（先执行后确认）
+
+```python
+from typing import Annotated, Literal
+from langchain_core.messages import HumanMessage, BaseMessage, ToolMessage
+from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
+from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.memory import MemorySaver
+
+
+# ==========================================
+# 1. 定义工具
+# ==========================================
+
+@tool
+def market_search(keyword: str) -> str:
+    """查询特定商品的全网二手实时均价"""
+    # 实际应用中，这里会调用真实的 API
+    return f"【系统查价】{keyword} 的当前市场均价为 4800 元。"
+
+
+# ==========================================
+# 2. 定义状态与节点
+# ==========================================
+
+class ToolState(TypedDict):
+    """工具审批流程的状态"""
+    messages: Annotated[list[BaseMessage], operator.add]
+
+
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+llm_with_tools = llm.bind_tools([market_search])
+
+
+def agent_node(state: ToolState) -> dict:
+    """AI 推理：决定是否调用工具"""
+    response = llm_with_tools.invoke(state["messages"])
+    return {"messages": [response]}
+
+
+def tool_node(state: ToolState) -> dict:
+    """
+    执行工具
+    
+    注意：此节点只有在人工放行后才会执行
+    因为我们在 compile 时设置了 interrupt_before=["Execute_Tool"]
+    """
+    last_msg = state["messages"][-1]
+    outputs = []
+    for call in last_msg.tool_calls:
+        if call["name"] == "market_search":
+            res = market_search.invoke(call["args"])
+            outputs.append(ToolMessage(content=str(res), tool_call_id=call["id"]))
+    return {"messages": outputs}
+
+
+def router(state: ToolState) -> Literal["Execute_Tool", "__end__"]:
+    """路由：判断是否需要调用工具"""
+    if state["messages"][-1].tool_calls:
+        return "Execute_Tool"
+    return "__end__"
+
+
+# ==========================================
+# 3. 构建图（设置拦截点）
+# ==========================================
+
+builder = StateGraph(ToolState)
+builder.add_node("Agent", agent_node)
+builder.add_node("Execute_Tool", tool_node)
+builder.add_edge(START, "Agent")
+builder.add_conditional_edges("Agent", router)
+builder.add_edge("Execute_Tool", "Agent")
+
+# 🌟 关键配置：在工具执行节点前设置断点
+# 当图执行到 Execute_Tool 节点时，会自动暂停
+app = builder.compile(
+    checkpointer=MemorySaver(),
+    interrupt_before=["Execute_Tool"]  # 拦截点配置
+)
+```
+
+**执行与审批流**：
+
+```python
+config = {"configurable": {"thread_id": "task_2"}}
+
+# ==========================================
+# 阶段 1：AI 生成工具调用请求
+# ==========================================
+for event in app.stream(
+    {"messages": [HumanMessage(content="MacBook Pro M2 现在能卖多少钱？")]},
+    config
+):
+    print(f"事件: {event}")
+
+# 此时图已挂起在 Execute_Tool 节点前
+
+# ==========================================
+# 阶段 2：人工审查拦截的工具调用
+# ==========================================
+
+# 使用 get_state() 获取挂起时的状态
+state = app.get_state(config)
+
+# 检查 AI 生成的工具调用请求
+last_message = state.values["messages"][-1]
+if last_message.tool_calls:
+    tool_call = last_message.tool_calls[0]
+    print(f"🛑 拦截到工具调用:")
+    print(f"   工具名: {tool_call['name']}")
+    print(f"   参数: {tool_call['args']}")
+    print(f"   调用 ID: {tool_call['id']}")
+    
+    # 人工决策：是否放行？
+    # 可以检查参数是否包含敏感信息
+    # 可以修改参数后再放行
+    # 可以直接拒绝（需要额外处理）
+
+# ==========================================
+# 阶段 3：人工审查后放行
+# ==========================================
+
+# 传入 None 表示放行，继续执行被拦截的节点
+for event in app.stream(None, config):
+    print(f"恢复后事件: {event}")
+
+# 查看最终结果
+final_state = app.get_state(config)
+print(f"最终回复: {final_state.values['messages'][-1].content}")
+```
+
+> **工具审批的典型决策流程**：
+> 1. 拦截工具调用请求
+> 2. 检查工具名称是否在白名单中
+> 3. 检查参数是否包含敏感信息（如 API Key、个人隐私）
+> 4. 检查参数格式是否正确
+> 5. 决策：放行 / 修改参数后放行 / 拒绝
+
+### 2.4 场景三：编辑图的状态（State Editing）
+
+**业务背景**：AI 机审由于关键词误判，将正常内容标记为"高风险"。人工审核员介入，强制改写状态中的 `risk_level` 字段，扭转最终的处置逻辑。
+
+**核心机制**：
+- `get_state()`：获取当前状态，检查 AI 的判断结果
+- `update_state(config, values, as_node=...)`：强制覆盖状态中的指定字段
+- `as_node` 参数：伪装成某个节点写入，确保图的执行逻辑一致
+
+```mermaid
+sequenceDiagram
+    participant AI as Audit 节点
+    participant Graph as 图执行引擎
+    participant Human as 人工审核员
+    participant State as 图状态
+    participant Action as Action 节点
+
+    AI->>Graph: 执行机审逻辑
+    AI->>State: 写入 risk_level="高风险"
+    Graph->>Graph: interrupt_before("Action") 暂停
+    Note over State: 当前: risk_level="高风险"
+
+    Human->>Graph: get_state() 查看状态
+    Graph-->>Human: 返回当前快照
+    Human->>Human: 判断: AI 误判，需要修正
+
+    Human->>Graph: update_state({risk_level: "低风险"}, as_node="Audit")
+    Graph->>State: 伪装成 Audit 节点写入
+    Note over State: 改写后: risk_level="低风险"
+
+    Human->>Graph: stream(None) 恢复执行
+    Graph->>Action: 执行处置逻辑
+    Action->>State: 读取 risk_level="低风险"
+    Action-->>Human: 输出: 安全合规，准予发布
+```
+
+**完整代码**：
+
+```python
+from typing import TypedDict
+from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.memory import MemorySaver
+
+
+# ==========================================
+# 1. 定义状态
+# ==========================================
+
+class EditState(TypedDict):
+    """内容审核流程的状态"""
+    content: str       # 待审核内容
+    risk_level: str    # 风险等级（AI 判定）
+    action_plan: str   # 处置方案
+
+
+# ==========================================
+# 2. 定义节点
+# ==========================================
+
+def audit_node(state: EditState) -> dict:
+    """
+    机审节点：模拟 AI 判定
+    
+    在实际场景中，这里会调用 LLM 进行内容审核
+    此处模拟一个误判场景：AI 将正常内容标记为高风险
+    """
+    # 模拟 AI 判定逻辑
+    content = state.get("content", "")
+    
+    # 关键词匹配（过于简单导致误判）
+    if "指南" in content or "教程" in content:
+        return {"risk_level": "高风险（判定包含敏感词）"}
+    return {"risk_level": "低风险"}
+
+
+def action_node(state: EditState) -> dict:
+    """
+    处置节点：根据风险等级执行
+    
+    注意：此节点读取的 risk_level 可能被人工修改过
+    这正是 State Editing 的价值所在
+    """
+    risk_level = state.get("risk_level", "")
+    
+    if "高风险" in risk_level:
+        plan = "触发风控，直接下架该内容。"
+    elif "中风险" in risk_level:
+        plan = "标记待审，人工复核后决定。"
+    else:
+        plan = "安全合规，准予发布。"
+    
+    return {"action_plan": plan}
+
+
+# ==========================================
+# 3. 构建图
+# ==========================================
+
+builder = StateGraph(EditState)
+builder.add_node("Audit", audit_node)
+builder.add_node("Action", action_node)
+builder.add_edge(START, "Audit")
+builder.add_edge("Audit", "Action")
+builder.add_edge("Action", END)
+
+# 在 Action 节点前设置断点，允许人工审查并修改状态
+app = builder.compile(
+    checkpointer=MemorySaver(),
+    interrupt_before=["Action"]  # 拦截点
+)
+```
+
+**状态编辑的完整流程**：
+
+```python
+config = {"configurable": {"thread_id": "task_3"}}
+
+# ==========================================
+# 阶段 1：机审自动判定
+# ==========================================
+for event in app.stream(
+    {"content": "买二手手机防坑指南", "risk_level": "", "action_plan": ""},
+    config
+):
+    print(f"事件: {event}")
+
+# 查看机审结果
+mid_state = app.get_state(config)
+print(f"机审判定: {mid_state.values.get('risk_level')}")
+# 输出: 高风险（判定包含敏感词）
+
+# ==========================================
+# 阶段 2：人工审查并改写状态
+# ==========================================
+
+# 人工判断：AI 误判，"指南"不是敏感词
+# 使用 update_state 强制覆盖 risk_level 字段
+
+app.update_state(
+    config,
+    {"risk_level": "低风险（人工修正误判）"},  # 要更新的字段
+    as_node="Audit"  # 🌟 关键参数：伪装成 Audit 节点写入
+)
+
+# as_node 的作用：
+# 1. 让图认为这个更新来自 Audit 节点
+# 2. 确保后续节点的执行逻辑一致
+# 3. 在状态历史中保留正确的来源信息
+
+# ==========================================
+# 阶段 3：带着修正后的状态继续执行
+# ==========================================
+
+# 传入 None 恢复执行
+for event in app.stream(None, config):
+    print(f"恢复后事件: {event}")
+
+# 查看最终结果
+final_state = app.get_state(config)
+print(f"最终处置: {final_state.values.get('action_plan')}")
+# 输出: 安全合规，准予发布。
+```
+
+> **`as_node` 参数深度解析**：
+> - 不指定 `as_node`：更新会被视为来自外部注入，可能触发额外的验证逻辑
+> - 指定 `as_node="Audit"`：更新被视为 Audit 节点的"重新执行"，保持图的执行语义一致
+> - 在生产环境中，建议总是指定 `as_node`，以便在状态历史中保留清晰的来源信息
+
+---
+
+## 三、综合实战案例：Agent 工具审批全流程
+
+以下是一个连贯的微型案例，展示 Agent 打算调用敏感工具 → 触发断点 → 人类审查参数 → 修改参数 → 审批通过 → 继时执行的完整流程。
+
+```python
+"""
+综合案例：Agent 工具审批全流程
+
+场景：用户询问股票投资建议，Agent 决定调用"股票查询工具"
+流程：
+1. Agent 推理后决定调用 stock_query 工具
+2. 在工具执行前触发断点
+3. 人工审查工具参数（检查是否包含敏感操作）
+4. 人工修改参数（添加风险提示）
+5. 审批通过，继续执行
+6. 工具执行完毕，Agent 给出最终回答
+"""
+
+import operator
+from typing import Annotated, TypedDict, Literal
+from langchain_core.messages import BaseMessage, HumanMessage, ToolMessage
+from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
+from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.types import interrupt, Command
+
+
+# ==========================================
+# 1. 定义工具（模拟敏感操作）
+# ==========================================
+
+@tool
+def stock_query(symbol: str, action: str = "查询") -> str:
+    """
+    股票查询工具：查询股票实时行情
+    
+    Args:
+        symbol: 股票代码（如 AAPL, TSLA）
+        action: 操作类型（查询/买入/卖出）
+    """
+    # 注意：这是一个敏感工具，action="买入" 或 "卖出" 需要人工审批
+    if action == "买入":
+        return f"⚠️ 模拟执行：已买入 {symbol} 100股"
+    elif action == "卖出":
+        return f"⚠️ 模拟执行：已卖出 {symbol} 100股"
+    else:
+        return f"【行情查询】{symbol} 当前价格: $150.25，涨跌幅: +2.3%"
+
+
+@tool
+def risk_warning(message: str) -> str:
+    """风险提示工具：向用户展示风险警告"""
+    return f"⚠️ 风险提示：{message}"
+
+
+# ==========================================
+# 2. 定义状态
+# ==========================================
+
+class StockAgentState(TypedDict):
+    """股票 Agent 的状态"""
+    messages: Annotated[list[BaseMessage], operator.add]
+    approval_status: str  # 审批状态
+
+
+# ==========================================
+# 3. 定义节点
+# ==========================================
+
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+tools = [stock_query, risk_warning]
+llm_with_tools = llm.bind_tools(tools)
+
+
+def agent_node(state: StockAgentState) -> dict:
+    """Agent 推理节点：决定下一步操作"""
+    response = llm_with_tools.invoke(state["messages"])
+    return {"messages": [response]}
+
+
+def tool_executor(state: StockAgentState) -> dict:
+    """
+    工具执行节点
+    
+    注意：此节点在 interrupt_before 保护下
+    只有人工放行后才会执行
+    """
+    last_msg = state["messages"][-1]
+    outputs = []
+    
+    for call in last_msg.tool_calls:
+        tool_name = call["name"]
+        tool_args = call["args"]
+        
+        if tool_name == "stock_query":
+            result = stock_query.invoke(tool_args)
+        elif tool_name == "risk_warning":
+            result = risk_warning.invoke(tool_args)
+        else:
+            result = f"未知工具: {tool_name}"
+        
+        outputs.append(ToolMessage(content=str(result), tool_call_id=call["id"]))
+    
+    return {"messages": outputs}
+
+
+def router(state: StockAgentState) -> Literal["Execute_Tool", "__end__"]:
+    """路由逻辑"""
+    if state["messages"][-1].tool_calls:
+        return "Execute_Tool"
+    return "__end__"
+
+
+# ==========================================
+# 4. 构建图
+# ==========================================
+
+builder = StateGraph(StockAgentState)
+builder.add_node("Agent", agent_node)
+builder.add_node("Execute_Tool", tool_executor)
+builder.add_edge(START, "Agent")
+builder.add_conditional_edges("Agent", router)
+builder.add_edge("Execute_Tool", "Agent")
+
+# 关键配置：在工具执行前设置断点
+app = builder.compile(
+    checkpointer=MemorySaver(),
+    interrupt_before=["Execute_Tool"]
+)
+```
+
+**执行审批流程**：
+
+```python
+# ==========================================
+# 阶段 1：Agent 推理，决定调用工具
+# ==========================================
+config = {"configurable": {"thread_id": "stock_demo"}}
+
+print("=" * 50)
+print("阶段 1：Agent 推理")
+print("=" * 50)
+
+for event in app.stream(
+    {"messages": [HumanMessage(content="帮我查一下苹果股票的行情")]},
+    config
+):
+    print(f"事件: {event}")
+
+# ==========================================
+# 阶段 2：人工审查工具调用
+# ==========================================
+print("\n" + "=" * 50)
+print("阶段 2：人工审查")
+print("=" * 50)
+
+state = app.get_state(config)
+last_message = state.values["messages"][-1]
+
+if last_message.tool_calls:
+    for i, call in enumerate(last_message.tool_calls):
+        print(f"\n🛑 拦截到工具调用 #{i+1}:")
+        print(f"   工具名: {call['name']}")
+        print(f"   参数: {call['args']}")
+        print(f"   调用 ID: {call['id']}")
+        
+        # 人工审查逻辑
+        if call["name"] == "stock_query":
+            action = call["args"].get("action", "查询")
+            if action in ["买入", "卖出"]:
+                print(f"   ⚠️ 检测到敏感操作: {action}")
+                print(f"   📝 建议: 修改 action 为 '查询'，仅查看行情")
+                
+                # 人工修改参数
+                call["args"]["action"] = "查询"
+                print(f"   ✅ 已修改参数: {call['args']}")
+
+# ==========================================
+# 阶段 3：审批通过，继续执行
+# ==========================================
+print("\n" + "=" * 50)
+print("阶段 3：审批通过，继续执行")
+print("=" * 50)
+
+# 传入 None 放行
+for event in app.stream(None, config):
+    print(f"事件: {event}")
+
+# ==========================================
+# 查看最终结果
+# ==========================================
+print("\n" + "=" * 50)
+print("最终结果")
+print("=" * 50)
+
+final_state = app.get_state(config)
+print(f"Agent 回复: {final_state.values['messages'][-1].content}")
+```
+
+**预期输出**：
+
+```
+==================================================
+阶段 1：Agent 推理
+==================================================
+事件: {'Agent': {'messages': [AIMessage(content='', tool_calls=[{'name': 'stock_query', 'args': {'symbol': 'AAPL', 'action': '查询'}, 'id': '...'}])]}}
+
+==================================================
+阶段 2：人工审查
+==================================================
+
+🛑 拦截到工具调用 #1:
+   工具名: stock_query
+   参数: {'symbol': 'AAPL', 'action': '查询'}
+   调用 ID: ...
+
+==================================================
+阶段 3：审批通过，继续执行
+==================================================
+事件: {'Execute_Tool': {'messages': [ToolMessage(content='【行情查询】AAPL 当前价格: $150.25，涨跌幅: +2.3%', tool_call_id='...')]}}
+事件: {'Agent': {'messages': [AIMessage(content='苹果股票（AAPL）当前价格为 $150.25，今日涨跌幅为 +2.3%。...')]}}
+
+==================================================
+最终结果
+==================================================
+Agent 回复: 苹果股票（AAPL）当前价格为 $150.25，今日涨跌幅为 +2.3%。...
+```
+
+```mermaid
+graph TD
+    subgraph Phase1["阶段 1：Agent 推理"]
+        direction LR
+        P1A["用户查询"] --> P1B["Agent 决定<br/>调用 stock_query"]
+    end
+
+    subgraph Phase2["阶段 2：人工审查"]
+        direction LR
+        P2A["🛑 拦截<br/>interrupt_before"] --> P2B["人工审查参数"] --> P2C["审批通过"]
+    end
+
+    subgraph Phase3["阶段 3：继续执行"]
+        direction LR
+        P3A["工具执行"] --> P3B["Agent 生成<br/>最终回答"]
+    end
+
+    Phase1 --> Phase2 --> Phase3
+
+    style Phase1 fill:#d6eaf8,stroke:#2980b9
+    style Phase2 fill:#fef9e7,stroke:#f39c12
+    style Phase3 fill:#d5f5e3,stroke:#27ae60
+```
+
+---
+
+## 四、三种模式对比
+
+| 模式 | 实现手段 | 适用场景 | 数据流向 | 恢复方式 |
+|------|---------|----------|----------|----------|
+| **Interrupt 挂起** | `interrupt()` + `Command(resume=...)` | 需要人工补充信息 | 人工 → Agent | `Command(resume=值)` |
+| **拦截审查** | `interrupt_before=["节点"]` + `stream(None)` | 敏感操作审批 | 人工审查参数 | `stream(None, config)` |
+| **状态改写** | `update_state(config, data, as_node=...)` | 修正 AI 误判 | 人工 → State | `stream(None, config)` |
+
+**选择决策树**：
+
+```mermaid
+graph TD
+    Start["需要人机交互？"] --> Q1{"需要人工<br/>提供新信息？"}
+    Q1 -->|"是"| M1["使用 Interrupt<br/>interrupt() + Command(resume=...)"]
+    Q1 -->|"否"| Q2{"需要审查<br/>AI 的决策？"}
+    Q2 -->|"是"| Q3{"需要修改<br/>AI 的决策？"}
+    Q3 -->|"是"| M3["使用 State Editing<br/>update_state()"]
+    Q3 -->|"否"| M2["使用 Tool Approval<br/>interrupt_before"]
+    Q2 -->|"否"| End["无需人机交互"]
+
+    style Start fill:#f0f6fd,stroke:#3498db
+    style M1 fill:#d5f5e3,stroke:#27ae60
+    style M2 fill:#fef9e7,stroke:#f39c12
+    style M3 fill:#fdebd0,stroke:#e67e22
+    style End fill:#f5b7b1,stroke:#e74c3c
+```
+
+---
+
+## 五、最佳实践
+
+### 5.1 基础配置
+
+1. **始终配置 Checkpointer**：凡是用到 Interrupt 的图，必须传入 Checkpointer，否则无法持久化和恢复
+2. **线程隔离**：不同对话使用不同的 `thread_id`，避免状态串扰
+3. **生产环境使用数据库持久化**：`MemorySaver` 仅用于开发测试
+
+### 5.2 中断与恢复
+
+4. **合理设置拦截点**：`interrupt_before` 在节点执行前拦截，`interrupt_after` 在节点执行后拦截
+5. **恢复执行用 `None`**：不需要人工输入的场景，使用 `stream(None, config)` 直接恢复
+6. **使用 `get_state()` 检查中间状态**：在做出决策前，先查看当前状态
+
+### 5.3 状态编辑
+
+7. **`update_state` 谨慎使用**：可以伪装成任意节点，这是双刃剑——务必记录操作审计日志
+8. **总是指定 `as_node` 参数**：确保状态历史中保留清晰的来源信息
+9. **状态改写后验证**：修改状态后，使用 `get_state()` 确认修改生效
+
+### 5.4 常见陷阱
+
+| 陷阱 | 说明 | 解决方案 |
+|------|------|----------|
+| 忘记配置 Checkpointer | interrupt 无法工作 | 始终在 compile 时传入 checkpointer |
+| thread_id 冲突 | 不同任务共用 thread_id 导致状态串扰 | 使用 UUID 或任务 ID 作为 thread_id |
+| 无限循环 | interrupt 后忘记恢复 | 设置超时机制或监控挂起状态 |
+| 状态类型不匹配 | update_state 传入错误类型 | 使用 TypedDict 或 Pydantic 进行类型约束 |
+
+---
+
+## 下一步
+
+在掌握了持久化与人机交互后，下一篇将探讨：
+- **多 Agent 协作**：如何让多个专业 Agent 协同完成复杂任务
+- **任务分发**：使用 Send API 实现并行处理
+- **通信协议**：Agent 之间的消息传递与状态共享
+
+## 全套公开课课件领取：
+
+![微信图片_20260527113559_2936_46](./images/display.png)
