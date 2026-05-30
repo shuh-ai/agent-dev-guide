@@ -8,32 +8,16 @@
 
 ## 技术标签
 
-`LLM Application`
-`AI Agent`
-`RAG`
-`GraphRAG`
-`Agentic RAG`
-`LangChain`
-`LangGraph`
-`Hermes-Agent`
-`MCP`
-`Tool Calling`
-`Workflow`
-`Prompt Engineering`
-`Context Engineering`
-`Memory`
-`Multi-Agent`
-`Model Serving`
-`Embedding`
-`Vector Database`
-`Reranking`
-`Retrieval`
-`Knowledge Base`
-`Reasoning Workflow`
-`LLM Evaluation`
-`AI Engineering`
-`AI Product Delivery`
-`AI Community`
+![AI](https://img.shields.io/badge/AI-Application-0F766E?style=flat-square)
+![LLM](https://img.shields.io/badge/LLM-Development-2563EB?style=flat-square)
+![RAG](https://img.shields.io/badge/RAG-Retrieval-7C3AED?style=flat-square)
+![Agent](https://img.shields.io/badge/Agentic-AI-DB2777?style=flat-square)
+![LangChain](https://img.shields.io/badge/LangChain-Framework-1C3C3C?style=flat-square)
+![LangGraph](https://img.shields.io/badge/LangGraph-Workflow-0F172A?style=flat-square)
+![MCP](https://img.shields.io/badge/MCP-Protocol-F97316?style=flat-square)
+![Prompt Engineering](https://img.shields.io/badge/Prompt-Engineering-16A34A?style=flat-square)
+![Evaluation](https://img.shields.io/badge/LLM-Evaluation-9333EA?style=flat-square)
+![Docs](https://img.shields.io/badge/Docs-Learning_Guide-64748B?style=flat-square)
 
 ## 社区入口
 
