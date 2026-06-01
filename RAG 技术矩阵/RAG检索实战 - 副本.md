@@ -91,7 +91,7 @@
 
 > 📊 **RAG 基础架构总览：**
 
-![RAG Basic Architecture](./images/RAG_Basic_Architecture.jpg)
+![RAG Basic Architecture](.\images\RAG Basic Architecture.jpg)
 
 ```Python
 import os
@@ -186,7 +186,7 @@ answer.response
 
   **Small-to-Big（小索引，大窗口）** 策略，又称 **Sentence Window Retrieval**，正是为了解决这一痛点而设计。该策略的核心思想在于将用于 **"搜索"** 的数据与用于 **"给 LLM 看"** 的数据分离开来。
 
-![Sentence Window Retrieval](./images/Sentence_Window_Retrieval.jpg)
+![Sentence Window Retrieval](.\images\Sentence Window Retrieval.jpg)
 
 - **小索引**
 - **大窗口 (Big Window for Generation)：** 单句往往缺乏上下文，因此在切分时，系统会预先将该句子**前后相邻的 N 句话**作为元数据（Metadata）存储起来。
@@ -446,7 +446,7 @@ for q in test_questions:
 
   **混合检索（Hybrid Search）** 正是为解决这一痛点而提出，其思路是"两条腿走路"——既要语义理解，也要字面匹配。
 
-![Sentence Window Retrieval](./images/Sentence_Window_Retrieval.jpg)
+![Sentence Window Retrieval](.\images\Sentence Window Retrieval.jpg)
 
 ### 2. 核心原理：双路召回与加权融合
 
@@ -630,7 +630,7 @@ for q in test_questions:
 
 路由检索的核心思想是 **"先分类，后检索"**。系统在检索链中插入一个 **路由器（Router）**，该路由器负责分析用户问题，然后将其路由到最合适的下游处理器。
 
-![Sentence Window Retrieval](./images/Sentence_Window_Retrieval.jpg)
+![Sentence Window Retrieval](.\images\Sentence Window Retrieval.jpg)
 
 Llama-Index 提供了两种路由模式：
 
@@ -803,7 +803,7 @@ for q in router_questions:
 
 Llama-Index 的 **PandasQueryEngine** 给出了一个优雅的解决方案：**不让 LLM 直接"看"数据，而是让 LLM "写代码"来查数据。**
 
-![Sentence Window Retrieval](./images/Sentence_Window_Retrieval.jpg)
+![Sentence Window Retrieval](.\images\Sentence Window Retrieval.jpg)
 
 ### 2. 核心原理：Natural Language → Pandas Code → DataFrame Query
 
