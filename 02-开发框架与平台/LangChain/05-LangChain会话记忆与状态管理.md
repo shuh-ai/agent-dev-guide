@@ -545,4 +545,13 @@ print(response.content)
 
 ## 全套公开课课件领取：
 
-![微信图片_20260527113559_2936_46](./images/display.png)
+![display](./images/display.png)
+
+## DXZY.AI
+
+DXZY.AI - 专注于 AI、RAG、Agent、MCP
+![DXZY.AI Logo](./images/logo.png)
+
+- GitHub: https://github.com/dxzyai/agent-dev-guide
+- 官网: https://dxzy.ai
+  ![DXZY.AI 服务](./images/service-qrcode.png)
