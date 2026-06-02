@@ -9,16 +9,16 @@
 
 ### 1.1 背景与定位
 
-在构建基于大语言模型（LLM）的应用时，开发者面临一个核心挑战：**如何让模型不仅能回答问题，还能执行多步骤任务、调用外部工具、并在必要时寻求人工协助？**
+构建 LLM 应用时，一个绕不开的问题：**怎么让模型不只是回答问题，还能执行多步任务、调用工具、必要时找人帮忙？**
 
-传统的 LangChain Chain 采用线性管道模式——输入经过一系列预定义的处理步骤后输出。这种模式在简单的问答场景下工作良好，但在以下场景中显得力不从心：
+传统 LangChain Chain 是线性管道——输入经过一系列预定义步骤后输出。简单问答够用，但碰到以下场景就吃力了：
 
-- **需要循环推理**：Agent 调用工具后需要根据结果决定下一步行动
-- **需要状态管理**：多轮对话需要维护上下文，或在任务执行中途暂停
-- **需要人机协作**：敏感操作需要人工审批，或需要人工补充信息
-- **需要并行处理**：多个独立任务需要同时执行以提高效率
+- **需要循环推理**：Agent 调用工具后需要根据结果决定下一步
+- **需要状态管理**：多轮对话要维护上下文，或在任务中途暂停
+- **需要人机协作**：敏感操作要人工审批，或需要人工补充信息
+- **需要并行处理**：多个独立任务同时执行以提高效率
 
-**LangGraph** 正是为解决这些问题而生的底层图框架。它受 Google Pregel 和 Apache Beam 的启发，公共接口借鉴了 NetworkX，专为构建**有状态、多角色、带循环**的 LLM 应用而设计。
+💡 **LangGraph** 就是为这些场景设计的底层图框架。受 Google Pregel 和 Apache Beam 启发，公共接口借鉴了 NetworkX，专为**有状态、多角色、带循环**的 LLM 应用而设计。
 
 ### 1.2 核心优势对比
 
@@ -52,7 +52,7 @@ graph TD
 
 ### 1.3 设计灵感
 
-LangGraph 的底层图算法基于**消息传递（Message Passing）**机制，灵感来自 Google 的 Pregel 系统。程序以离散的"超级步骤（Super Step）"运行：
+LangGraph 的底层图算法基于**消息传递（Message Passing）** 机制，灵感来自 Google 的 Pregel 系统。程序以离散的"超级步骤（Super Step）"运行：
 
 - **超级步骤**：图节点上的一次迭代。并行运行的节点属于同一个超级步骤，顺序运行的节点属于不同超级步骤
 - **激活机制**：节点在任何传入边（通道）上收到新消息时变为 `active` 状态，执行其函数并更新状态
@@ -62,7 +62,7 @@ LangGraph 的底层图算法基于**消息传递（Message Passing）**机制，
 
 ## 二、核心概念速览
 
-LangGraph 的核心由三个基本构件组成：
+LangGraph 由三个基本构件组成：
 
 ```mermaid
 graph LR
@@ -107,8 +107,8 @@ def my_node(state: MyState) -> dict:
 ```
 
 **特殊节点**：
-- **START**：代表用户输入入口点，决定哪些节点首先被调用
-- **END**：代表终止节点，指定哪些边在完成后没有后续动作
+- **START**：用户输入入口点，决定哪些节点首先被调用
+- **END**：终止节点，指定哪些边在完成后没有后续动作
 
 ### 2.3 Edge（边）
 
@@ -120,9 +120,9 @@ def my_node(state: MyState) -> dict:
 
 ---
 
-## 三、快速起步：第一个 ReAct Agent
+## 三、🛠️ 快速起步：第一个 ReAct Agent
 
-下面是一个完整的搜索 Agent 示例，演示了 LangGraph 的核心开发流程：**定义状态 → 添加节点 → 连接边 → 编译执行**。
+下面是一个完整的搜索 Agent 示例，演示 LangGraph 的核心开发流程：**定义状态 → 添加节点 → 连接边 → 编译执行**。
 
 ### 3.1 环境准备
 
@@ -262,7 +262,7 @@ def search(query: str) -> str:
     return "现在是35度，阳光明媚。"
 ```
 
-使用 `@tool` 装饰器定义工具函数。函数的 docstring 会自动成为工具的描述，供 LLM 理解何时以及如何调用该工具。
+`@tool` 装饰器定义工具函数。函数的 docstring 会自动成为工具的描述，供 LLM 理解何时以及如何调用。
 
 #### 步骤 2：绑定工具到 LLM
 
@@ -271,7 +271,7 @@ model = ChatOpenAI(model="gpt-4o", temperature=0)
 model = model.bind_tools(tools)
 ```
 
-`bind_tools()` 方法将工具的 JSON Schema 注入到 LLM 的系统提示中，使模型能够：
+`bind_tools()` 将工具的 JSON Schema 注入到 LLM 的系统提示中，使模型能够：
 - 理解每个工具的功能和参数
 - 在推理过程中决定是否需要调用工具
 - 生成符合工具参数规范的调用请求
@@ -297,8 +297,8 @@ def should_continue(state: MessagesState) -> Literal["tools", "__end__"]:
 ```
 
 路由函数检查 LLM 的最后一条消息：
-- 如果包含 `tool_calls`（LLM 决定调用工具），返回 `"tools"` → 路由到 Tools 节点
-- 如果不包含 `tool_calls`（LLM 直接回答），返回 `"__end__"` → 结束执行
+- 包含 `tool_calls` → 返回 `"tools"`，路由到 Tools 节点
+- 不包含 `tool_calls` → 返回 `"__end__"`，结束执行
 
 #### 步骤 5：构建图结构
 
@@ -338,7 +338,7 @@ final_state = app.invoke(
 
 ## 四、执行过程时序图
 
-下图展示了上述 ReAct Agent 在运行时每一步的完整数据流：
+下图展示了 ReAct Agent 运行时每一步的完整数据流：
 
 ```mermaid
 sequenceDiagram
@@ -399,7 +399,7 @@ result = graph.invoke({"x": 1, "y": 2})
 print(result)  # {'x': 2, 'y': 4}
 ```
 
-编译图时，LangGraph 会进行结构校验（检测孤立节点等），同时可指定运行时参数：
+编译时，LangGraph 会进行结构校验（检测孤立节点等），同时可指定运行时参数：
 
 ```python
 # 编译时可指定 checkpointer、打断点等
@@ -411,7 +411,7 @@ graph = builder.compile(
 
 ### 5.1 使用 Pydantic BaseModel 定义状态
 
-当需要**默认值**、**数据验证**或**序列化控制**时，可以使用 Pydantic BaseModel：
+需要**默认值**、**数据验证**或**序列化控制**时，用 Pydantic BaseModel：
 
 ```python
 from pydantic import BaseModel, Field
@@ -444,7 +444,7 @@ graph TD
 
 ---
 
-## 七、流式输出与调试
+## 七、📐 流式输出与调试
 
 LangGraph 支持多种流式输出模式，便于实时观察 Agent 的推理过程：
 
@@ -476,7 +476,7 @@ for event in app.stream(
 
 ### 7.3 Token 级流式输出
 
-对于需要实时显示 LLM 生成内容的场景：
+需要实时显示 LLM 生成内容的场景：
 
 ```python
 for event in app.stream(
@@ -508,19 +508,19 @@ for event in app.stream(
 
 ---
 
-## 九、最佳实践
+## 九、✅ 最佳实践
 
-1. **始终定义清晰的 State 结构**：使用 TypedDict 或 BaseModel，明确每个字段的类型和用途
-2. **合理使用 Reducer**：列表字段使用 `Annotated[list, operator.add]` 实现追加，避免覆盖
+1. **始终定义清晰的 State 结构**：用 TypedDict 或 BaseModel，明确每个字段的类型和用途
+2. **合理使用 Reducer**：列表字段用 `Annotated[list, operator.add]` 实现追加，避免覆盖
 3. **配置 Checkpointer**：生产环境务必启用持久化，支持对话记忆和断点续传
-4. **设置 recursion_limit**：防止无限循环，默认值 25 可能不够，建议设为 50-150
+4. **设置 recursion_limit**：防止无限循环。默认值 25 对于复杂 Agent 来说偏保守，建议设为 50-150
 5. **使用 LangSmith 跟踪**：配置 `LANGSMITH_TRACING=true` 获得完整的执行轨迹可视化
 
 ---
 
 ## 下一步
 
-在掌握了 LangGraph 的基础构建流程后，下一篇将深入探讨：
+掌握了 LangGraph 的基础构建流程后，下一篇将深入探讨：
 - **State（状态）** 的 Schema 定义与 Reducer 归约器机制
 - **Node（节点）** 的同步/异步实现与特殊节点
 - **Edge（边）** 的四种模式：普通边、条件边、条件入口点、Send API 并行分发
