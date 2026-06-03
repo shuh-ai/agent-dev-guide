@@ -1,6 +1,6 @@
 # Part 6. LlamaIndex RAG 进阶检索策略详解
 
-> 本文是 AI 大模型技术社区「RAG 检索增强生成」系列的第 6 篇。
+> 本文是笃行智元 AI 大模型技术社区「RAG 检索增强生成」系列的第 6 篇。
 >
 > 从传统 RAG 的三大瓶颈出发，深入讲解 LlamaIndex 提供的三种进阶检索策略：Small-to-Big（小索引大窗口）、Hybrid Search（混合检索）、Router Query Engine（智能路由检索），每种策略均包含原理剖析、完整代码实现和效果对比。
 >
@@ -32,9 +32,7 @@ LlamaIndex 针对上述三个痛点，提供了三种进阶检索策略：
 | **Hybrid Search** | 向量语义 + BM25 关键词双路召回 | 语义 vs 字面的盲区 | `QueryFusionRetriever` + `BM25Retriever` |
 | **Router Query** | LLM 驱动的索引路由分发 | 宏观 vs 微观的判断力 | `RouterQueryEngine` + `LLMSingleSelector` |
 
-![RAG 架构总览](https://www.ibm.com/adobe/dynamicmedia/deliver/dm-aid--60acc712-1986-40ac-b178-def283549af5/retrieval-augmented-generation.png?preferwebp=true)
-
-> ▲ 传统 RAG 管道：用户查询 → 检索 → 生成。进阶策略在此基础上优化检索环节（来源：IBM）
+![RAG架构总览：检索增强生成流程](./images/RAG架构总览：检索增强生成流程.jpg)
 
 ### 1.3 开发环境准备
 
@@ -95,25 +93,7 @@ Settings.embed_model = OllamaEmbedding(
 
 **流程示意：**
 
-```
-原始文档 ──→ 中文分句切分 ──→ 孤立句子列表
-                                    │
-                    SentenceWindowNodeParser(window_size=3)
-                                    │
-                                    ▼
-              带有"上下文背包"的句子节点（metadata['window'] = 前后各3句）
-                                    │
-                    只对"句子文本"做 Embedding（为了搜得准）
-                                    │
-                                    ▼
-用户提问 ──→ 向量检索 ──→ 命中 Top-K 个句子
-                                    │
-                    MetadataReplacementPostProcessor
-                    用 metadata['window'] 替换 node.text
-                                    │
-                                    ▼
-              LLM 阅读"大窗口"内容 ──→ 生成回答（为了看得全）
-```
+![Small-to-Big流程示意](./images/Small-to-Big流程示意.jpg)
 
 ### 2.2 代码实现
 
@@ -255,18 +235,7 @@ sentence_window_engine = sentence_index.as_query_engine(
 
 **混合检索（Hybrid Search）** 主张"两条腿走路"：
 
-```
-用户提问 ──┬──→ 链路 A：稠密向量检索（Dense Vector）  ──→ 语义理解，捕捉意图
-           │                                              排名列表 A
-           │
-           └──→ 链路 B：稀疏关键词检索（BM25）        ──→ 字面匹配，精准定位
-                                                          排名列表 B
-                                                              │
-                                           RRF（倒数排名融合）算法
-                                                              │
-                                                              ▼
-                                                    最终排序结果 → LLM 生成
-```
+![HybridSearch流程示意](./images/HybridSearch流程示意.jpg)
 
 ![Hybrid Search 架构](https://qdrant.tech/articles_data/hybrid-search/fusion.png)
 
@@ -426,18 +395,7 @@ print(response)
 
 **智能路由（Router Query Engine）** 标志着 RAG 系统从"自动化"向 **Agent（智能体）** 迈出关键一步——它学会了**"先思考，再行动"**。
 
-```
-用户提问 ──→ Router（LLM Selector）
-                │
-                ├── 看工具 A 描述：查具体细节、数字 ──→ 不太匹配
-                ├── 看工具 B 描述：查宏观总结、概括 ──→ 匹配！
-                │
-                ▼
-            分发给工具 B（Summary Index）
-                │
-                ▼
-            tree_summarize 模式遍历文档 ──→ 生成全面摘要
-```
+![RouterQueryEngine流程示意](./images/RouterQueryEngine流程示意.jpg)
 
 ![Router Query Engine](https://cdn.sanity.io/images/vr8gru94/production/a40d852ad69f85abb76405032ff8c939da7be987-1420x1484.png)
 
@@ -636,17 +594,3 @@ Router Query Engine
 | **GLM-5** | 开源 | - | 智谱 AI，专为 Agent 工程设计，SWE-bench Verified 开源 SOTA |
 
 > **选型建议**：闭源首选 Gemini 3.5 Flash（性价比+长上下文）或 Claude Opus 4.7（复杂推理）；开源首选 DeepSeek V4-Pro（综合能力最强）或 Qwen3（中文场景最优）。
-
----
-
-## 七、后续预告
-
-- **Part 7**：RAG 系统评估与优化（RAGAS + Reranker 实战）
-- **Part 8**：多 Agent 协作——CrewAI 实战
-- **Part 9**：Self-RAG 与 Adaptive RAG 深度解析
-
-> 📢 更多讨论、源码、资料，欢迎加入 AI 大模型技术社区。
-
----
-
-*文档版本：v2.0 | 最后更新：2026 年 5 月*
