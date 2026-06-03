@@ -1,10 +1,8 @@
-# Part 4-2. GraphRAG 快速部署与调用方法详解
-
 > 本文是 AI 大模型技术社区「RAG 检索增强生成」系列的第 4-2 篇，聚焦 GraphRAG 的工程落地：从安装部署、索引构建到三种搜索模式（Local / Global / DRIFT）的 API 调用实战。
 >
 > 本文基于 **GraphRAG v2.8.0**（2025 年 3 月 27 日发布），包含最新的多模态支持、o1/o3-mini 模型适配等特性。
 >
-> 前置阅读：[Part 4. GraphRAG 快速入门与原理详解](./Part4-GraphRAG快速入门与原理详解.md)
+> 前置阅读：[04-GraphRAG原理与入门](./04-GraphRAG原理与入门.md)
 
 ---
 
@@ -115,7 +113,7 @@ print([m.id for m in models.data])
 
 ## 二、GraphRAG Indexing：构建知识图谱
 
-![GraphRAG Pipeline 流程图](https://raw.githubusercontent.com/microsoft/graphrag/main/docs/img/pipeline-running.png)
+![GraphRAG_Pipeline_流程图](./images/GraphRAG_Pipeline_流程图.png)
 
 > ▲ GraphRAG 索引构建流程
 
@@ -446,7 +444,7 @@ print(f"Prompt Token: {result.prompt_tokens}")
 
 ## 六、DRIFT Search（漂移搜索）
 
-![DRIFT Search 流程图](https://raw.githubusercontent.com/microsoft/graphrag/main/docs/img/drift-search-diagram.png)
+![DRIFT_Search_流程图](./images/DRIFT_Search_流程图.png)
 
 DRIFT（Dynamic Reasoning and Inference with Flexible Traversal）Search 是对 Local Search 的增强版本。它在局部搜索的基础上，额外引入社区信息来提供更丰富的上下文。
 
