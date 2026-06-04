@@ -1,8 +1,6 @@
-# Part 2. 从零到一快速搭建多模态 RAG 引擎
-
 > 本文是笃行智元 AI 大模型技术社区「RAG 检索增强生成」系列的第 2 篇，带你用 Unstructured + PaddleOCR + LangGraph + FAISS 从零搭建一个支持 PDF 图文混排检索的 Agentic RAG 系统。
 >
-> 前置阅读：[Part 1. RAG 技术体系全景](./Part1-RAG技术体系全景.md)
+> 前置阅读：[01-RAG技术体系全景](./01-RAG技术体系全景.md)
 
 ---
 

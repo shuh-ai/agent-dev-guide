@@ -312,14 +312,12 @@ def cn_sentence_split(text):
     # 按中文标点符号分割语句
     return re.split(r"(?<=[。？！\n])", text)
 ```
-```
-
 - **为什么要写这个函数？** `SentenceWindowNodeParser` 默认是为英文设计的，按英文句号 `.` 断句。直接处理中文文档时，解析器会将整篇文档视为**一整句话**，导致检索精度归零，同时可能撑爆 Embedding 模型的 Token 限制。
 - **代码原理解析：** `(?<=[。？！\n])` 是一个**"后向断言" (Lookbehind Assertion)**，表示"只要看到中文句号、问号、感叹号或者换行符，就在它们**后面**切一刀"，保留标点符号在句子中。
 
 **2. 定义窗口解析器**
 
-```Python
+```python
 text_splitter = SentenceWindowNodeParser.from_defaults(
     sentence_splitter=cn_sentence_split,
     window_size=4,
@@ -635,7 +633,7 @@ Llama-Index 提供了两种路由模式：
 - **LLM 选择器路由（LLM Selector Router）：** 将每个查询引擎的描述和示例问题交给 LLM，由 LLM 的推理能力决定路由目标
 - **嵌入相似度路由（Embedding Router）：** 将用户问题向量化，与各引擎预置的示例向量比较相似度，选择最匹配的引擎
 
-> 提示：** LLM 选择器路由更准确但较慢且成本高，嵌入相似度路由更快更省钱但在复杂问题上精准度略低。
+> 提示： LLM 选择器路由更准确但较慢且成本高，嵌入相似度路由更快更省钱但在复杂问题上精准度略低。
 
 ### 3. 执行流程
 
@@ -868,9 +866,7 @@ for i, q in enumerate(queries, 1):
     display(Markdown("---"))
 2025-12-11 19:56:44,312 - INFO - HTTP Request: POST https://ai.devtool.tech/proxy/v1/chat/completions "HTTP/1.1 200 OK"
 > Pandas Instructions:
-```
-df.groupby('学历')['基本薪资'].mean().round(2)
-```
+    df.groupby('学历')['基本薪资'].mean().round(2)
 > Pandas Output: 学历
 博士      28500.00
 硕士      18250.50
@@ -878,7 +874,6 @@ df.groupby('学历')['基本薪资'].mean().round(2)
 大专       8850.00
 Name: 基本薪资, dtype: float64
 ```
-
 ### Q1: 各学历等级的平均基本薪资是多少？请按学历分组展示。
 
 | 问题 | Pandas 分析结果 |

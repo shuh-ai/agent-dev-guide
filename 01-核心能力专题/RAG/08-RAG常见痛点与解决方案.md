@@ -2,13 +2,13 @@
 
 > 基于 Barnett 等人论文《Seven Failure Points When Engineering a Retrieval Augmented Generation System》及实践经验总结
 
-![RAG 架构总览](https://miro.medium.com/v2/resize:fit:1200/1*J7vyY3EjY46AlduMvr9FbQ.png)
+![RAG架构总览](./images/RAG架构总览.png)
 
 ---
 
 ## 一、内容缺失
 
-![RAG 幻觉与内容缺失](https://machinelearningmastery.com/wp-content/uploads/2026/03/mlm-olumide-reduce-rag-llm-hallucinations.png)
+![RAG幻觉与内容缺失](./images/RAG幻觉与内容缺失.png)
 
 ### 痛点
 
@@ -72,7 +72,7 @@ def detect_conflicts(documents):
 
 ## 二、错过了关键文档
 
-![RAG 检索与重排序流程](https://cdn.prod.website-files.com/69b2da72cae7eea2b0091d5f/69c0293686cb8ad5eb78a205_cross_encoder.png)
+![RAG检索与重排序流程](./images/RAG检索与重排序流程.png)
 
 ### 痛点
 
@@ -212,7 +212,7 @@ index = VectorStoreIndex.from_documents(
 
 ## 四、没有获取到正确的内容
 
-![提示压缩 LongLLMLingua](https://www.llamaindex.ai/blog/images/1*UiesYmTrcz0Li7OgE0DEvQ.png)
+![提示压缩LongLLMLingua](./images/提示压缩LongLLMLingua.png)
 
 ### 痛点
 
@@ -413,7 +413,7 @@ query_engine = RetrieverQueryEngine(fusion_retriever)
 
 ## 七、结果不完整
 
-![HyDE 查询转换流程](https://machinelearningplus.com/wp-content/uploads/2025/05/HyDE-Flow.png)
+![HyDE查询转换流程](./images/HyDE查询转换流程.png)
 
 ### 痛点
 
@@ -468,7 +468,7 @@ print(response)
 
 ## 八、可扩展性
 
-![RAG 并行数据摄取](https://raw.githubusercontent.com/ray-project/ray/refs/heads/master/doc/source/ray-overview/examples/e2e-rag/images/rag-data-ingestion-with-ray-data.png)
+![RAG并行数据摄取](./images/RAG并行数据摄取.png)
 
 ### 痛点
 
@@ -519,7 +519,7 @@ pipeline = IngestionPipeline(
 
 ## 九、结构化数据质量
 
-![RAG 结构化数据与 PDF 提取](https://miro.medium.com/v2/resize:fit:1400/1*y_Y-XDccxe6BReFgeAewYg.png)
+![RAG结构化数据与PDF 提取](./images/RAG结构化数据与PDF 提取.png)
 
 ### 痛点
 
@@ -570,7 +570,7 @@ print(response)
 
 ## 十、复杂PDF数据提取
 
-![RAG PDF 表格与数据提取](https://miro.medium.com/v2/resize:fit:1200/1*v1FzYi7H7GHG_ArssxVVCQ.png)
+![RAG_PDF_表格与数据提取](./images/RAG_PDF_表格与数据提取.png)
 
 ### 痛点
 
@@ -624,7 +624,7 @@ subprocess.run([
 
 ## 十一、备用模型（Fallback / Router）
 
-![LLM 路由与备用模型架构](https://miro.medium.com/v2/resize:fit:1400/1*D_pnaP69OEgSkiVxkBilZQ.png)
+![LLM_路由与备用模型架构](./images/LLM_路由与备用模型架构.png)
 
 ### 痛点
 
@@ -699,7 +699,7 @@ def query_with_fallback(query_engine, query, fallback_llm=None):
 
 ## 十二、LLM安全性
 
-![Llama Guard 安全审核机制](https://miro.medium.com/1*ZPUtry62s_C5PmA_NaR6Kg.png)
+![Llama_Guard_安全审核机制](./images/Llama_Guard_安全审核机制.png)
 
 ### 痛点
 
@@ -782,7 +782,7 @@ def quick_filter(query):
 
 ## 写在最后
 
-![RAG 最佳实践总结](https://cdn.prod.website-files.com/660ef16a9e0687d9cc27474a/687e38823874b267af004f9c_18_RAG_metrics-min.png)
+![RAG_最佳实践总结](./images/RAG_最佳实践总结.png)
 
 回顾一下 RAG 开发的几个关键原则：
 

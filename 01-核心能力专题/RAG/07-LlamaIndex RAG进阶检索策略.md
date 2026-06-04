@@ -1,10 +1,8 @@
-# Part 6. LlamaIndex RAG 进阶检索策略详解
-
 > 本文是笃行智元 AI 大模型技术社区「RAG 检索增强生成」系列的第 6 篇。
 >
 > 从传统 RAG 的三大瓶颈出发，深入讲解 LlamaIndex 提供的三种进阶检索策略：Small-to-Big（小索引大窗口）、Hybrid Search（混合检索）、Router Query Engine（智能路由检索），每种策略均包含原理剖析、完整代码实现和效果对比。
 >
-> 前置阅读：[Part 1. RAG 技术体系全景](./Part1-RAG技术体系全景.md) | [Part 2. 从零到一快速搭建多模态 RAG 引擎](./Part2-从零到一快速搭建多模态RAG引擎.md)
+> 前置阅读：[01-RAG技术体系全景](./01-RAG技术体系全景.md) | [02-多模态RAG快速搭建](./02-多模态RAG快速搭建.md)
 
 ---
 
@@ -237,7 +235,7 @@ sentence_window_engine = sentence_index.as_query_engine(
 
 ![HybridSearch流程示意](./images/HybridSearch流程示意.jpg)
 
-![Hybrid Search 架构](https://qdrant.tech/articles_data/hybrid-search/fusion.png)
+![HybridSearch 架构](./images/HybridSearch 架构.png)
 
 > ▲ 混合检索架构：稠密向量检索与稀疏 BM25 检索通过 RRF 融合（来源：Qdrant）
 
@@ -397,7 +395,7 @@ print(response)
 
 ![RouterQueryEngine流程示意](./images/RouterQueryEngine流程示意.jpg)
 
-![Router Query Engine](https://cdn.sanity.io/images/vr8gru94/production/a40d852ad69f85abb76405032ff8c939da7be987-1420x1484.png)
+![RouterQueryEngine](./images/RouterQueryEngine.png)
 
 > ▲ Router 架构：LLM 分析用户意图，动态选择最合适的检索工具（来源：Pinecone）
 
