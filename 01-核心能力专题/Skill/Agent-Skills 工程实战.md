@@ -44,7 +44,7 @@ my-skill/
 
 一个完整的 Skill 可以用这个公式概括：
 
-$$\text{Skill} = \text{Metadata} + \text{Instructions (SOP)} + \text{Examples} + \text{Tools}$$
+Skill = Metadata + Instructions (SOP) + Examples + Tools
 
 | 组件 | 作用 | 示例 |
 |------|------|------|
