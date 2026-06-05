@@ -403,10 +403,6 @@ graph TB
 }
 ```
 
-![Claude Code Hooks 配置界面](./images/claude_code_hooks_config.png)
-
-> **截图指南**：打开 Claude Code CLI，执行 `/config` 命令进入配置界面，或在 VS Code 中打开 Claude Code 扩展的 Settings 面板，找到 "Hooks" 配置区域截取。
-
 #### OpenAI Codex：Agent-First 的深度实践
 
 **核心优势**：
