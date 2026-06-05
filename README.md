@@ -121,13 +121,15 @@
 - [07-LlamaIndex RAG进阶检索策略](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/RAG/07-LlamaIndex%20RAG%E8%BF%9B%E9%98%B6%E6%A3%80%E7%B4%A2%E7%AD%96%E7%95%A5.md)
 - [08-RAG常见痛点与解决方案](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/RAG/08-RAG%E5%B8%B8%E8%A7%81%E7%97%9B%E7%82%B9%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
 - [09-RAG检索实战](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/RAG/09-RAG%E6%A3%80%E7%B4%A2%E5%AE%9E%E6%88%98.md)
+- [10-RAG 分块策略深度解析：5 种方案的原理、对比与选型实战](./01-核心能力专题/RAG/10-RAG 分块策略深度解析：5 种方案的原理、对比与选型实战.md)
+- [11-RAG检索进阶-Cross-Encoder重排序](./01-核心能力专题/RAG/11-RAG检索进阶-Cross-Encoder重排序.md)
+- [12-12-生产环境降幻觉四层防护体系](./01-核心能力专题/RAG/12-生产环境降幻觉四层防护体系.md)
 
 ### 开发框架与平台
 
 #### Hermes Agent
 
-- [00-Hermes Agent完整指南](./02-%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E4%B8%8E%E5%B9%B3%E5%8F%B0/Hermes-Agent/00-Hermes%20Agent%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97.md)
-- [01-Hermes Agent简介](./02-%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E4%B8%8E%E5%B9%B3%E5%8F%B0/Hermes-Agent/01-Hermes%20Agent%E7%AE%80%E4%BB%8B.md)
+- [01-Hermes Agent完整指南](./02-开发框架与平台/Hermes-Agent/01-Hermes Agent完整指南.md)
 - [02-Hermes Agent安装与部署](./02-%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E4%B8%8E%E5%B9%B3%E5%8F%B0/Hermes-Agent/02-Hermes%20Agent%E5%AE%89%E8%A3%85%E4%B8%8E%E9%83%A8%E7%BD%B2.md)
 - [03-Hermes Agent接入应用](./02-%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E4%B8%8E%E5%B9%B3%E5%8F%B0/Hermes-Agent/03-Hermes%20Agent%E6%8E%A5%E5%85%A5%E5%BA%94%E7%94%A8.md)
 - [04-Hermes Agent工具与工具集](./02-%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E4%B8%8E%E5%B9%B3%E5%8F%B0/Hermes-Agent/04-Hermes%20Agent%E5%B7%A5%E5%85%B7%E4%B8%8E%E5%B7%A5%E5%85%B7%E9%9B%86.md)
