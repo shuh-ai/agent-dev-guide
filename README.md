@@ -125,6 +125,17 @@
 - [11-RAG检索进阶-Cross-Encoder重排序](./01-核心能力专题/RAG/11-RAG检索进阶-Cross-Encoder重排序.md)
 - [12-12-生产环境降幻觉四层防护体系](./01-核心能力专题/RAG/12-生产环境降幻觉四层防护体系.md)
 
+#### Skill
+
+- [Agent-Skills 基础入门](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Skill/Agent-Skills%20%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8.md)
+- [Agent-Skills 工程实战](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Skill/Agent-Skills%20%E5%B7%A5%E7%A8%8B%E5%AE%9E%E6%88%98.md)
+
+#### Harness Engineering
+
+- [01-Harness基础概念与核心架构](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Harness%20Engineering/01-Harness%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84.md)
+- [02-Harness四大支柱详解](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Harness%20Engineering/02-Harness%E5%9B%9B%E5%A4%A7%E6%94%AF%E6%9F%B1%E8%AF%A6%E8%A7%A3.md)
+- [03-Harness行业案例与平台对比](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Harness%20Engineering/03-Harness%E8%A1%8C%E4%B8%9A%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%B9%B3%E5%8F%B0%E5%AF%B9%E6%AF%94.md)
+
 ### 开发框架与平台
 
 #### Hermes Agent
