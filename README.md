@@ -74,6 +74,8 @@
 ### `01-核心能力专题`
 
 - `RAG`
+- `Agent`
+- `工具调用与MCP`
 - 后续可扩展：Prompt Engineering、上下文工程、多模态、记忆、工作流设计、评测与对齐
 
 ### `02-开发框架与平台`
@@ -125,6 +127,13 @@
 - [11-RAG检索进阶-Cross-Encoder重排序](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/RAG/11-RAG%E6%A3%80%E7%B4%A2%E8%BF%9B%E9%98%B6-Cross-Encoder%E9%87%8D%E6%8E%92%E5%BA%8F.md)
 - [12-生产环境降幻觉四层防护体系](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/RAG/12-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E9%99%8D%E5%B9%BB%E8%A7%89%E5%9B%9B%E5%B1%82%E9%98%B2%E6%8A%A4%E4%BD%93%E7%B3%BB.md)
 
+#### Agent
+
+- [01-2026年Agent架构选型：8种模式的组合与取舍](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Agent/01-2026%E5%B9%B4Agent%E6%9E%B6%E6%9E%84%E9%80%89%E5%9E%8B-8%E7%A7%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BB%84%E5%90%88%E4%B8%8E%E5%8F%96%E8%88%8D.md)
+
+#### 工具调用与MCP
+
+- [01-Function Calling与MCP：Agent工具调用从原理到实战](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E4%B8%8EMCP/01-Function-Calling%E4%B8%8EMCP-Agent%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E4%BB%8E%E5%8E%9F%E7%90%86%E5%88%B0%E5%AE%9E%E6%88%98.md)
 #### Skill
 
 - [Agent-Skills 基础入门](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Skill/Agent-Skills%20%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8.md)
