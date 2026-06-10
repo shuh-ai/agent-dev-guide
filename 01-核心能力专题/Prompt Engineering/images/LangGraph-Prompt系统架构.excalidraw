@@ -1,0 +1,789 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  },
+  "elements": [
+    {
+      "type": "text",
+      "id": "at",
+      "x": 140,
+      "y": 15,
+      "width": 520,
+      "height": 30,
+      "text": "LangGraph Prompt 工程化系统架构",
+      "fontSize": 24,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "LangGraph Prompt 工程化系统架构",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "u",
+      "x": 40,
+      "y": 70,
+      "width": 120,
+      "height": 50,
+      "backgroundColor": "#e3f2fd",
+      "fillStyle": "solid",
+      "strokeColor": "#1976d2",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "tu",
+          "type": "text"
+        },
+        {
+          "id": "aur",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tu",
+      "x": 45,
+      "y": 78,
+      "width": 110,
+      "height": 20,
+      "text": "用户输入",
+      "fontSize": 18,
+      "fontFamily": 1,
+      "strokeColor": "#1565c0",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "u",
+      "originalText": "用户输入",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "aur",
+      "x": 160,
+      "y": 95,
+      "width": 60,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "r",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "diamond",
+      "id": "r",
+      "x": 220,
+      "y": 55,
+      "width": 160,
+      "height": 80,
+      "backgroundColor": "#fff3e0",
+      "fillStyle": "solid",
+      "strokeColor": "#f57c00",
+      "boundElements": [
+        {
+          "id": "tr",
+          "type": "text"
+        },
+        {
+          "id": "aur",
+          "type": "arrow"
+        },
+        {
+          "id": "ars",
+          "type": "arrow"
+        },
+        {
+          "id": "arc",
+          "type": "arrow"
+        },
+        {
+          "id": "art",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tr",
+      "x": 225,
+      "y": 75,
+      "width": 150,
+      "height": 20,
+      "text": "任务分类器",
+      "fontSize": 17,
+      "fontFamily": 1,
+      "strokeColor": "#e65100",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "r",
+      "originalText": "任务分类器",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "ars",
+      "x": 300,
+      "y": 135,
+      "width": 0,
+      "height": 40,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          40
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#2f9e44",
+      "startBinding": {
+        "elementId": "r",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "s",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "tlabel1",
+      "x": 310,
+      "y": 145,
+      "width": 60,
+      "height": 14,
+      "text": "simple",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#2f9e44",
+      "originalText": "simple",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "arc",
+      "x": 300,
+      "y": 135,
+      "width": 120,
+      "height": 50,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          50
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#1971c2",
+      "startBinding": {
+        "elementId": "r",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "c",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "tlabel2",
+      "x": 390,
+      "y": 155,
+      "width": 60,
+      "height": 14,
+      "text": "medium",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "originalText": "medium",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "art",
+      "x": 380,
+      "y": 95,
+      "width": 80,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          80,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#7048e8",
+      "startBinding": {
+        "elementId": "r",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "t",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "tlabel3",
+      "x": 400,
+      "y": 78,
+      "width": 60,
+      "height": 14,
+      "text": "complex",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#7048e8",
+      "originalText": "complex",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "s",
+      "x": 220,
+      "y": 175,
+      "width": 160,
+      "height": 45,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#2f9e44",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "ts",
+          "type": "text"
+        },
+        {
+          "id": "ars",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "ts",
+      "x": 225,
+      "y": 180,
+      "width": 150,
+      "height": 20,
+      "text": "gpt-4o-mini",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#2b8a3e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "s",
+      "originalText": "gpt-4o-mini",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "c",
+      "x": 420,
+      "y": 175,
+      "width": 160,
+      "height": 45,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#1971c2",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "tc",
+          "type": "text"
+        },
+        {
+          "id": "arc",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tc",
+      "x": 425,
+      "y": 180,
+      "width": 150,
+      "height": 20,
+      "text": "gpt-4o",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1864ab",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "c",
+      "originalText": "gpt-4o",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "t",
+      "x": 460,
+      "y": 70,
+      "width": 140,
+      "height": 50,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#7048e8",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "tt2",
+          "type": "text"
+        },
+        {
+          "id": "art",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tt2",
+      "x": 465,
+      "y": 78,
+      "width": 130,
+      "height": 20,
+      "text": "o3-mini",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#5f3dc4",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "t",
+      "originalText": "o3-mini",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "ase",
+      "x": 300,
+      "y": 220,
+      "width": 0,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "s",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "ev",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "ace",
+      "x": 500,
+      "y": 220,
+      "width": 0,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "c",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "ev",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "ate",
+      "x": 530,
+      "y": 120,
+      "width": 0,
+      "height": 135,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -130,
+          135
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "t",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "ev",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "ev",
+      "x": 280,
+      "y": 250,
+      "width": 200,
+      "height": 50,
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeColor": "#e03131",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "tev",
+          "type": "text"
+        },
+        {
+          "id": "ase",
+          "type": "arrow"
+        },
+        {
+          "id": "ace",
+          "type": "arrow"
+        },
+        {
+          "id": "ate",
+          "type": "arrow"
+        },
+        {
+          "id": "aevo",
+          "type": "arrow"
+        },
+        {
+          "id": "aevr",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tev",
+      "x": 285,
+      "y": 258,
+      "width": 190,
+      "height": 20,
+      "text": "LLM-as-Judge 评估",
+      "fontSize": 17,
+      "fontFamily": 1,
+      "strokeColor": "#c92a2a",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "ev",
+      "originalText": "LLM-as-Judge 评估",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "aevo",
+      "x": 380,
+      "y": 300,
+      "width": 0,
+      "height": 35,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          35
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#2f9e44",
+      "startBinding": {
+        "elementId": "ev",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "out",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "tpass",
+      "x": 390,
+      "y": 308,
+      "width": 40,
+      "height": 14,
+      "text": "通过",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#2f9e44",
+      "originalText": "通过",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "out",
+      "x": 310,
+      "y": 335,
+      "width": 140,
+      "height": 45,
+      "backgroundColor": "#e8f5e9",
+      "fillStyle": "solid",
+      "strokeColor": "#388e3c",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "tout",
+          "type": "text"
+        },
+        {
+          "id": "aevo",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tout",
+      "x": 315,
+      "y": 340,
+      "width": 130,
+      "height": 20,
+      "text": "返回结果",
+      "fontSize": 17,
+      "fontFamily": 1,
+      "strokeColor": "#2e7d32",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "out",
+      "originalText": "返回结果",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "aevr",
+      "x": 280,
+      "y": 275,
+      "width": 180,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -180,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#e03131",
+      "strokeStyle": "dashed",
+      "startBinding": {
+        "elementId": "ev",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "retry",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "tfail",
+      "x": 140,
+      "y": 258,
+      "width": 60,
+      "height": 14,
+      "text": "不通过",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#e03131",
+      "originalText": "不通过",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "retry",
+      "x": 40,
+      "y": 250,
+      "width": 140,
+      "height": 45,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#e67700",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "tretry",
+          "type": "text"
+        },
+        {
+          "id": "aevr",
+          "type": "arrow"
+        },
+        {
+          "id": "arr2",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tretry",
+      "x": 45,
+      "y": 258,
+      "width": 130,
+      "height": 20,
+      "text": "升级 Prompt",
+      "fontSize": 17,
+      "fontFamily": 1,
+      "strokeColor": "#e67700",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "retry",
+      "originalText": "升级 Prompt",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "arr2",
+      "x": 110,
+      "y": 250,
+      "width": 0,
+      "height": -180,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -180
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#e67700",
+      "strokeStyle": "dashed",
+      "startBinding": {
+        "elementId": "retry",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "endBinding": {
+        "elementId": "r",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    }
+  ]
+}

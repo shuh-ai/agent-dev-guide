@@ -74,7 +74,8 @@
 ### `01-核心能力专题`
 
 - `RAG`
-- 后续可扩展：Prompt Engineering、上下文工程、多模态、记忆、工作流设计、评测与对齐
+- `Prompt Engineering`
+- 后续可扩展：上下文工程、多模态、记忆、工作流设计、评测与对齐
 
 ### `02-开发框架与平台`
 
@@ -126,6 +127,11 @@
 
 - [Agent-Skills 基础入门](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Skill/Agent-Skills%20%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8.md)
 - [Agent-Skills 工程实战](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Skill/Agent-Skills%20%E5%B7%A5%E7%A8%8B%E5%AE%9E%E6%88%98.md)
+
+#### Prompt Engineering
+
+- [01-Prompt设计：结构、技术与反模式](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Prompt%20Engineering/01-Prompt-%E8%AE%BE%E8%AE%A1%EF%BC%9A%E7%BB%93%E6%9E%84%E3%80%81%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%8F%8D%E6%A8%A1%E5%BC%8F.md)
+- [02-Prompt工程化：版本管理、评估与LangGraph实战](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Prompt%20Engineering/02-Prompt-%E5%B7%A5%E7%A8%8B%E5%8C%96%EF%BC%9A%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E3%80%81%E8%AF%84%E4%BC%B0%E4%B8%8ELangGraph%E5%AE%9E%E6%88%98.md)
 
 #### Harness Engineering
 

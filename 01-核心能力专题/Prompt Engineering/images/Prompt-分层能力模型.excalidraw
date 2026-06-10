@@ -1,0 +1,306 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  },
+  "elements": [
+    {
+      "type": "text",
+      "id": "t0",
+      "x": 180,
+      "y": 15,
+      "width": 440,
+      "height": 30,
+      "text": "Prompt Engineering 分层能力模型",
+      "fontSize": 24,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "Prompt Engineering 分层能力模型",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r4",
+      "x": 80,
+      "y": 60,
+      "width": 640,
+      "height": 75,
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeColor": "#e03131",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t4",
+          "type": "text"
+        },
+        {
+          "id": "t4b",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t4",
+      "x": 90,
+      "y": 66,
+      "width": 140,
+      "height": 22,
+      "text": "L4 Meta",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#c92a2a",
+      "originalText": "L4 Meta",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "t4b",
+      "x": 90,
+      "y": 92,
+      "width": 620,
+      "height": 18,
+      "text": "Self-Refine  |  Prompt 生成 Prompt  |  自动优化循环",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#495057",
+      "originalText": "Self-Refine  |  Prompt 生成 Prompt  |  自动优化循环",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r3",
+      "x": 80,
+      "y": 150,
+      "width": 640,
+      "height": 75,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#7048e8",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t3",
+          "type": "text"
+        },
+        {
+          "id": "t3b",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t3",
+      "x": 90,
+      "y": 156,
+      "width": 180,
+      "height": 22,
+      "text": "L3 Advanced",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#5f3dc4",
+      "originalText": "L3 Advanced",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "t3b",
+      "x": 90,
+      "y": 182,
+      "width": 620,
+      "height": 18,
+      "text": "ReAct  |  Tree-of-Thought  |  Self-Consistency  |  Tool-Augmented",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#495057",
+      "originalText": "ReAct  |  Tree-of-Thought  |  Self-Consistency  |  Tool-Augmented",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r2",
+      "x": 80,
+      "y": 240,
+      "width": 640,
+      "height": 75,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#1971c2",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t2",
+          "type": "text"
+        },
+        {
+          "id": "t2b",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t2",
+      "x": 90,
+      "y": 246,
+      "width": 200,
+      "height": 22,
+      "text": "L2 Intermediate",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#1864ab",
+      "originalText": "L2 Intermediate",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "t2b",
+      "x": 90,
+      "y": 272,
+      "width": 620,
+      "height": 18,
+      "text": "Few-Shot  |  Chain-of-Thought  |  结构化输出  |  角色设定",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#495057",
+      "originalText": "Few-Shot  |  Chain-of-Thought  |  结构化输出  |  角色设定",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r1",
+      "x": 80,
+      "y": 330,
+      "width": 640,
+      "height": 75,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#2f9e44",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t1",
+          "type": "text"
+        },
+        {
+          "id": "t1b",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t1",
+      "x": 90,
+      "y": 336,
+      "width": 180,
+      "height": 22,
+      "text": "L1 Foundation",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#2b8a3e",
+      "originalText": "L1 Foundation",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "t1b",
+      "x": 90,
+      "y": 362,
+      "width": 620,
+      "height": 18,
+      "text": "System/User/Assistant 角色  |  指令清晰度  |  约束条件  |  输出格式",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#495057",
+      "originalText": "System/User/Assistant 角色  |  指令清晰度  |  约束条件  |  输出格式",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a1",
+      "x": 400,
+      "y": 135,
+      "width": 0,
+      "height": 15,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          15
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#868e96"
+    },
+    {
+      "type": "arrow",
+      "id": "a2",
+      "x": 400,
+      "y": 225,
+      "width": 0,
+      "height": 15,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          15
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#868e96"
+    },
+    {
+      "type": "arrow",
+      "id": "a3",
+      "x": 400,
+      "y": 315,
+      "width": 0,
+      "height": 15,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          15
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#868e96"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "x": 80,
+      "y": 420,
+      "width": 640,
+      "height": 20,
+      "text": "越往上越依赖推理能力和工程化支撑，越往下越依赖表达清晰度和领域知识",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#868e96",
+      "originalText": "越往上越依赖推理能力和工程化支撑，越往下越依赖表达清晰度和领域知识",
+      "autoResize": true
+    }
+  ]
+}
