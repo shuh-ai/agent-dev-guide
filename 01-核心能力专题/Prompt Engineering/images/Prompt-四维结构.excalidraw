@@ -1,0 +1,345 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  },
+  "elements": [
+    {
+      "type": "text",
+      "id": "tt",
+      "x": 160,
+      "y": 15,
+      "width": 480,
+      "height": 30,
+      "text": "生产级 Prompt 的四维结构",
+      "fontSize": 24,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "生产级 Prompt 的四维结构",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "d1",
+      "x": 40,
+      "y": 65,
+      "width": 340,
+      "height": 110,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#1971c2",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "td1",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "td1",
+      "x": 50,
+      "y": 73,
+      "width": 320,
+      "height": 85,
+      "text": "Dimension 1: Instruction\n\n角色定义 + 任务描述 + 行为约束\n\"你是一个资深法务顾问...\"",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1864ab",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": "d1",
+      "originalText": "Dimension 1: Instruction\n\n角色定义 + 任务描述 + 行为约束\n\"你是一个资深法务顾问...\"",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "d2r",
+      "x": 420,
+      "y": 65,
+      "width": 340,
+      "height": 110,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#2f9e44",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "td2",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "td2",
+      "x": 430,
+      "y": 73,
+      "width": 320,
+      "height": 85,
+      "text": "Dimension 2: Knowledge\n\n上下文注入 + 领域知识 + 参考文档\nRAG 检索结果 / Skill 指令",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#2b8a3e",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": "d2r",
+      "originalText": "Dimension 2: Knowledge\n\n上下文注入 + 领域知识 + 参考文档\nRAG 检索结果 / Skill 指令",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "d3",
+      "x": 40,
+      "y": 200,
+      "width": 340,
+      "height": 110,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeColor": "#e8590c",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "td3",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "td3",
+      "x": 50,
+      "y": 208,
+      "width": 320,
+      "height": 85,
+      "text": "Dimension 3: Tools\n\nFunction Calling 定义 + 工具描述\nMCP 服务端点 + 参数约束",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#d9480f",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": "d3",
+      "originalText": "Dimension 3: Tools\n\nFunction Calling 定义 + 工具描述\nMCP 服务端点 + 参数约束",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "d4",
+      "x": 420,
+      "y": 200,
+      "width": 340,
+      "height": 110,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#7048e8",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "td4",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "td4",
+      "x": 430,
+      "y": 208,
+      "width": 320,
+      "height": 85,
+      "text": "Dimension 4: Memory\n\n对话历史 + 长期记忆 + 用户偏好\nAgent 跨会话状态管理",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#5f3dc4",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": "d4",
+      "originalText": "Dimension 4: Memory\n\n对话历史 + 长期记忆 + 用户偏好\nAgent 跨会话状态管理",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "ctr",
+      "x": 240,
+      "y": 350,
+      "width": 320,
+      "height": 50,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#e67700",
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "tctr",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tctr",
+      "x": 245,
+      "y": 355,
+      "width": 310,
+      "height": 22,
+      "text": "Context Window Budget",
+      "fontSize": 22,
+      "fontFamily": 1,
+      "strokeColor": "#e67700",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "ctr",
+      "originalText": "Context Window Budget",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "ac1",
+      "x": 210,
+      "y": 175,
+      "width": 100,
+      "height": 175,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          130,
+          175
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#868e96",
+      "startBinding": {
+        "elementId": "d1",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "ctr",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "ac2",
+      "x": 590,
+      "y": 175,
+      "width": 100,
+      "height": 175,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -130,
+          175
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#868e96",
+      "startBinding": {
+        "elementId": "d2r",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "ctr",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "ac3",
+      "x": 210,
+      "y": 310,
+      "width": 100,
+      "height": 40,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          140,
+          40
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#868e96",
+      "startBinding": {
+        "elementId": "d3",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "ctr",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "ac4",
+      "x": 590,
+      "y": 310,
+      "width": 100,
+      "height": 40,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -140,
+          40
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#868e96",
+      "startBinding": {
+        "elementId": "d4",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "ctr",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      }
+    }
+  ]
+}
