@@ -15,10 +15,9 @@ Codex 是 OpenAI 推出的 AI 编程助手，提供独立桌面客户端（Codex
 | 开发商 | OpenAI |
 | 主要形态 | Codex App 桌面客户端（macOS / Windows） |
 | 开源协议 | Apache 2.0 |
-| GitHub Stars | 89.2K+ |
-| 默认模型 | GPT-5.5 / o4-mini / gpt-4o |
+| GitHub Stars | 89K+ |
+| 默认模型 | o4-mini / gpt-4o / gpt-5-codex |
 | **第三方模型** | **通过 Codex++ 中转注入接入** |
-| 最新版本 | CLI v0.135.0（2026年5月28日） |
 
 ---
 
@@ -28,12 +27,10 @@ Codex 是 OpenAI 推出的 AI 编程助手，提供独立桌面客户端（Codex
 
 | 限制 | 说明 |
 |------|------|
-| 模型绑定 | 默认只能使用 OpenAI 的模型（GPT-5.5、o4-mini、gpt-4o 等） |
+| 模型绑定 | 默认只能使用 OpenAI 的模型（o4-mini、gpt-4o 等） |
 | 费用较高 | ChatGPT Pro $200/月，API 按量计费也不便宜 |
 | 网络要求 | 直连 OpenAI 服务器，国内访问不稳定 |
 | 账号风控 | 多设备登录、频繁切换 IP 容易触发风控 |
-
-> **最新动态：** 2026年4月23日，OpenAI 发布了 **GPT-5.5**，成为 Codex 的推荐默认模型，拥有 400K 上下文窗口（API 中为 1M），价格为 $5/$30 每百万 token，在 Terminal-Bench 2.0 上达到 82.7% SOTA。
 
 ### 2.2 第三方 API 的优势
 
@@ -72,16 +69,6 @@ Codex 是 OpenAI 推出的 AI 编程助手，提供独立桌面客户端（Codex
 [Codex++](https://github.com/BigPizzaV3/CodexPlusPlus) 是面向 Codex App 的外部增强启动器和管理工具（GitHub Stars: 16.6K+）。它不修改 Codex App 原始安装文件，而是通过 Chromium DevTools Protocol (CDP) 注入增强脚本。
 
 **技术栈：** Rust + Tauri + React
-
-**最新版本特性（v0.135.0，2026年5月28日）：**
-- `codex doctor` 命令报告更丰富的环境、Git、终端、应用服务器和线程清单
-- `/status` 显示远程连接详情和服务器版本
-- vim 模式增强：文本对象编辑、改进的单词/行尾行为、可配置中断轮次
-- `/permissions` 支持**命名权限配置文件**
-- 历史会话搜索（v0.134.0 引入）：支持大小写不敏感的内容匹配和结果预览
-- `--profile` 成为主要的配置文件选择器
-- MCP 设置改进：每服务器环境定位和 OAuth 选项
-- Goals 功能默认启用（v0.133.0）：专用存储和进度跟踪
 
 ### 3.1 中转注入（核心功能）
 
@@ -168,14 +155,13 @@ experimental_bearer_token = "sk-your-api-key"
 
 | 模型 | 官方价（输入/百万token） | 中转价（参考） | 适合场景 |
 |------|------------------------|---------------|----------|
-| **GPT-5.5** | $5.00 | ¥3.0~5.0 | 复杂编码、计算机使用、研究 |
 | o4-mini | $1.10 | ¥0.5~1.0 | 日常开发 |
 | gpt-4o | $2.50 | ¥1.5~3.0 | 复杂任务 |
+| gpt-5-codex | $5.00 | ¥3.0~5.0 | 大型重构 |
 | DeepSeek V3 | $0.27 | ¥0.1~0.3 | 性价比之选 |
-| Claude Sonnet 4 | $3.00 | ¥1.5~3.0 | 代码质量高 |
-| Gemini 2.5 Pro | $1.0~2.0 | ¥1.0~2.0 | 超长上下文（1M tokens） |
+| Claude Sonnet | $3.00 | ¥1.5~3.0 | 代码质量高 |
 
-> 具体价格以各平台实时报价为准。GPT-5.5 于 2026年4月23日发布，拥有 400K 上下文窗口（API 中为 1M），是 Codex 的推荐默认模型。
+> 具体价格以各平台实时报价为准。
 
 ---
 
@@ -185,14 +171,10 @@ experimental_bearer_token = "sk-your-api-key"
 
 1. 前往 [Codex++ GitHub Releases](https://github.com/BigPizzaV3/CodexPlusPlus/releases)
 2. 下载对应系统的安装包：
-   - Windows：`CodexPlusPlus-*-windows-x64-setup.exe`（原生支持，含 Agent 沙箱）
+   - Windows：`CodexPlusPlus-*-windows-x64-setup.exe`
    - macOS（Apple Silicon）：`CodexPlusPlus-*-macos-arm64.dmg`
    - macOS（Intel）：`CodexPlusPlus-*-macos-x64.dmg`
 3. 运行安装程序
-
-> **Windows 用户注意：** Codex 桌面端现已原生支持 Windows，包含原生 Agent 沙箱和 Windows 开发者工具链支持。详见 [Windows 安装指南](https://itecsonline.com/post/how-to-install-codex-cli-on-windows-2026-guide)。
-
-![Codex CLI 在 Windows Terminal 中运行](./images/codex_windows_terminal.jpg)
 
 ### 步骤二：配置第三方 API
 
@@ -232,26 +214,3 @@ experimental_bearer_token = "sk-your-api-key"
 | 2 | [Codex 桌面端安装与配置](./02-Codex安装与配置.md) | Codex++ 安装、中转注入配置、认证 |
 | 3 | [Codex 桌面端核心功能详解](./03-Codex核心功能详解.md) | AGENTS.md、Skills、MCP、会话管理 |
 | 4 | [Codex 桌面端实战技巧与踩坑](./04-Codex实战技巧与踩坑.md) | Prompt 技巧、Codex++ 高级功能、FAQ |
-
-## 九、参考资源
-
-| 资源 | 链接 | 说明 |
-|------|------|------|
-| Codex++ GitHub | [BigPizzaV3/CodexPlusPlus](https://github.com/BigPizzaV3/CodexPlusPlus) | 增强启动器源码 |
-| Codex 官方文档 | [developers.openai.com/codex](https://developers.openai.com/codex) | 官方配置参考 |
-| Codex CLI 参考 | [blakecrosley.com/guides/codex](https://blakecrosley.com/guides/codex) | CLI v0.135 详细指南 |
-| Windows 安装指南 | [ITECS 2026 Guide](https://itecsonline.com/post/how-to-install-codex-cli-on-windows-2026-guide) | Windows 安装详细步骤 |
-| Codex CLI 速查表 | [shipyard.build/blog/codex-cli-cheat-sheet](https://shipyard.build/blog/codex-cli-cheat-sheet) | 命令和配置速查 |
-| Agentic Coding 2026 | [halallens.no](https://halallens.no/en/blog/agentic-coding-in-2026-the-complete-guide-to-plugins-multi-model-orchestration-and-ai-agent-teams) | 多 Agent 编排指南 |
-
-### 中文参考资料
-
-| 资源 | 链接 | 说明 |
-|------|------|------|
-| Codex++ 全流程图解 | [博客园](https://www.cnblogs.com/ganhuo1/p/20393852) | 2026 最新，含 DeepSeek 接入 |
-| Codex++ 技术分析 | [txtmix](https://txtmix.com/posts/tech/codexplusplus-launcher-injection-cox-enhancement/) | CDP 注入架构详解 |
-| Codex++ 增强指南 | [CSDN](https://blog.csdn.net/weixin_41961749/article/details/161262799) | 插件解锁、API 中转 |
-| Codex++ 功能介绍 | [知乎](https://zhuanlan.zhihu.com/p/2041479669141206141) | 核心功能详解 |
-| Codex 国内使用指南 | [小林coding](https://www.xiaolincoding.com/other/codex.html) | 注册支付、CLI 配置 |
-| Codex App 安装指南 | [xaicontrol](https://xaicontrol.com/blog/codex-app-install-config-guide/) | macOS / Windows 安装 |
-| Codex 应用教程 | [OpenAI 中文](https://developers.openai.ac.cn/codex/app) | 官方应用文档 |

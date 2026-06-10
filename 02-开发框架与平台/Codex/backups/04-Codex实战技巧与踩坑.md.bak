@@ -256,34 +256,6 @@ Codex++ 支持在普通聊天和本地项目之间迁移会话：
 4. **项目笔记：** 在 AGENTS.md 中记录项目的技术决策，帮助 Codex 理解上下文
 5. **增量审查：** 代码审查时只粘贴变更部分（diff），避免 Codex 分析无关代码
 
-### 3.6 最新功能（v0.135.0，2026年5月28日）
-
-**Goals 功能（v0.133.0 默认启用）：**
-- 专用存储和进度跟踪
-- 可以在对话中设定和追踪目标
-- 支持远程控制：前台就绪/状态 + 守护进程式启动/停止
-
-**历史会话搜索（v0.134.0）：**
-- 支持大小写不敏感的内容匹配
-- 结果预览功能
-- `--profile` 成为主要的配置文件选择器
-
-**权限配置文件（v0.133.0）：**
-- 列表 API、继承、托管 `requirements.toml`
-- 运行时刷新
-- 更强的 Windows 沙箱集成
-
-**插件发现增强：**
-- 显示已安装版本
-- 市场根目录和远程集合
-
-**扩展和钩子上下文：**
-- 观察子代理启动/停止
-- 工具执行、轮次元数据
-- 异步审批/轮次处理
-
-> **详细更新日志：** [Codex CLI v0.135 Reference](https://blakecrosley.com/guides/codex)
-
 ---
 
 ## 4. AGENTS.md 最佳实践（桌面端）
@@ -402,14 +374,7 @@ AGENTS.md 是 Codex 的项目配置文件，桌面端用户同样需要配置好
 | 增强功能 | Codex++ 全功能 | 基础功能 | 基础功能 |
 | 插件系统 | ✅ 支持 | ❌ 不支持 | ❌ 不支持 |
 | 离线使用 | 部分支持 | ❌ 不支持 | ❌ 不支持 |
-| Windows 支持 | ✅ 原生支持 | ✅ 浏览器访问 | ✅ PowerShell/WSL2 |
 | 推荐场景 | 日常开发 | 快速体验 | 自动化脚本 |
-
-**2026年最新变化：**
-- **GPT-5.5** 成为推荐默认模型（400K 上下文窗口）
-- **Windows 原生支持**：包含 Agent 沙箱和开发者工具链
-- **Goals 功能**：默认启用，支持目标设定和进度跟踪
-- **历史会话搜索**：支持内容匹配和结果预览
 
 ### Q2: 可以同时使用多个 OpenAI 账户吗？
 
@@ -456,18 +421,3 @@ Codex++ 是开源项目，安全性说明：
 2. **GitHub Issues：** 在 Codex++ 仓库提交 Issue
 3. **社区讨论：** 加入 Codex++ Discord / 论坛社区
 4. **日志查看：** `~/.codex/logs/` 目录下的日志文件
-
----
-
-## 7. 参考资源
-
-| 资源 | 链接 | 说明 |
-|------|------|------|
-| Codex++ GitHub | [BigPizzaV3/CodexPlusPlus](https://github.com/BigPizzaV3/CodexPlusPlus) | 增强启动器源码 |
-| Codex 官方文档 | [developers.openai.com/codex](https://developers.openai.com/codex) | 官方配置参考 |
-| Codex CLI 参考 | [blakecrosley.com/guides/codex](https://blakecrosley.com/guides/codex) | CLI v0.135 详细指南 |
-| Windows 安装指南 | [ITECS 2026 Guide](https://itecsonline.com/post/how-to-install-codex-cli-on-windows-2026-guide) | Windows 安装详细步骤 |
-| Codex CLI 速查表 | [shipyard.build/blog/codex-cli-cheat-sheet](https://shipyard.build/blog/codex-cli-cheat-sheet) | 命令和配置速查 |
-| Agentic Coding 2026 | [halallens.no](https://halallens.no/en/blog/agentic-coding-in-2026-the-complete-guide-to-plugins-multi-model-orchestration-and-ai-agent-teams) | 多 Agent 编排指南 |
-| Skills 安装指南 | [agensi.io](https://www.agensi.io/learn/how-to-install-skills-in-codex-cli) | Skills 安装和配置 |
-| MCP 配置参考 | [platform.uno](https://platform.uno/blog/mcp-configuration-across-ai-agents) | MCP 跨 Agent 配置 |

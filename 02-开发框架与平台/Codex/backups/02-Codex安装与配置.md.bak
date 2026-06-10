@@ -21,31 +21,11 @@ Codex++ 是面向 Codex App 的**外部增强启动器和管理工具**（GitHub
 
 **技术栈：** Rust + Tauri + React
 
-**工作原理：**
-
-```
-┌─────────────────────────────────┐
-│  Codex++ 管理工具 (Tauri)       │  ← 用户配置入口
-└────────────────┬────────────────┘
-                 │ 写入 ~/.codex/config.toml
-                 ↓
-┌─────────────────────────────────┐
-│  Codex++ Launcher (Rust)        │  ← 静默启动入口
-└────────────────┬────────────────┘
-                 │ spawn 进程
-                 ↓
-┌─────────────────────────────────┐
-│  原版 Codex App                 │  ← 进程未修改
-│  ↳ CDP 注入 renderer-inject.js  │  ← 关键：通过 Chrome DevTools Protocol
-└─────────────────────────────────┘
-```
-
-**核心设计理念：**
+核心设计理念：
 
 - **不修改原始 Codex** — Codex++ 是独立的增强层，原版 Codex 文件不受影响
 - **基于 CDP 协议** — 通过 DevTools 协议与 Codex App 通信，安全可靠
-- **可逆性强** — 关闭增强后就是干净的原生 Codex
-- **跨平台一致** — CDP 协议在 macOS/Windows 行为一致
+- **透明增强** — 启动后自动生效，无需手动操作
 
 **项目地址：** [github.com/BigPizzaV3/CodexPlusPlus](https://github.com/BigPizzaV3/CodexPlusPlus)
 
@@ -69,8 +49,6 @@ Codex++ 是面向 Codex App 的**外部增强启动器和管理工具**（GitHub
 2. 找到最新版本，下载 `CodexPlusPlus-*-windows-x64-setup.exe`
 3. 双击运行安装程序，按向导完成安装
 4. 安装完成后，桌面和开始菜单自动生成快捷方式
-
-![Windows 安装步骤](./images/codex-install-01.png)
 
 ### 2.4 macOS 安装
 
@@ -112,26 +90,28 @@ sudo xattr -rd com.apple.quarantine /Applications/Codex++.app
 
 ## 3. 首次启动与认证
 
-### 3.1 获取 OpenAI API Key
+### 3.1 ChatGPT 账户登录
 
-如果你选择 API Key 模式登录，需要先获取 OpenAI API Key：
+首次启动 Codex++ 时，应用会提示登录 ChatGPT 账户。支持以下订阅计划：
 
-1. 打开 OpenAI 登录网页（https://auth.openai.com/log-in），登录
-2. 登录后，点击左侧的"API Keys"，在 API Keys 页面点击右上角的"Create new secret key"
-3. 给你的 API Key 取一个名字，点击"Create secret key"
-4. 点击"Copy"，复制你的 API Key（务必保存好，关闭页面后无法再次查看）
+| 计划 | 支持情况 |
+|------|----------|
+| Plus | ✅ 支持 |
+| Pro | ✅ 支持 |
+| Business | ✅ 支持 |
+| Enterprise | ✅ 支持 |
 
-![获取 API Key](./images/codex-apikey-01.png)
+登录流程：点击登录按钮 → 浏览器跳转至 OpenAI 授权页面 → 完成登录 → 自动返回应用。
 
-### 3.2 使用 API Key 登录 Codex
+### 3.2 API Key 模式（BYOK）
 
-1. 打开原版 Codex 桌面端程序（Codex App）
-2. 点击选择"Sign in another way"
-3. 在输入框中粘贴你刚刚创建的 API Key
-4. 点击"Continue"
-5. 登录成功后，点击左下角 Settings，可以看到显示"Logged in with API key"
+如果不想使用 ChatGPT 账户，可以使用自有 API Key（Bring Your Own Key）：
 
-![API Key 登录](./images/codex-apikey-02.png)
+1. 在首次启动的认证界面选择 **"Use API Key"**
+2. 填入 OpenAI API Key（格式：`sk-pro-...`）
+3. 点击确认保存
+
+如需后续修改 API Key，可在 Codex App 的 **Settings** 界面中更新。
 
 ### 3.3 认证文件位置
 
@@ -181,67 +161,34 @@ Codex++ 管理工具是独立的 Tauri 控制面板，用于维护和配置 Code
 | **Cubence** | 稳定高效，长期运营 | cubence.com |
 | **Unity2.ai** | 高性能，日均 300 亿 token | unity2.ai |
 
-**以 DeepSeek 为例的配置步骤：**
+**配置步骤：**
 
-#### 步骤 1：获取 DeepSeek API Key
+1. 在第三方平台注册并获取 **API Key** 和 **Base URL**
+2. 打开 **Codex++ 管理工具** → **中转注入** 页面
+3. 添加一个或多个中转配置，填写 Base URL 和 Key
+4. 选择当前配置并应用中转注入
+5. 启动 **Codex++**
 
-1. 打开 DeepSeek 网页（https://platform.deepseek.com/sign_in），登录
-2. 在登录后的界面点击左侧"API keys"，点击右侧下方的"创建 API key"
-3. 给你的 DeepSeek API key 取一个名字，点击"创建"
-4. 点击"复制"，复制你的 API key（务必保存好）
+**中转注入后 config.toml 配置示例：**
 
-![获取 DeepSeek API Key](./images/deepseek-apikey-01.png)
+```toml
+model_provider = "CodexPlusPlus"
 
-#### 步骤 2：配置 Codex++ 管理工具
+[model_providers.CodexPlusPlus]
+name = "CodexPlusPlus"
+wire_api = "responses"
+requires_openai_auth = true
+base_url = "https://your-api-endpoint.com/v1"
+experimental_bearer_token = "sk-..."
+```
 
-**注意：** 在开始前，请完全退出 Codex，注意除了关闭桌面上的界面，在任务栏也要退出 Codex。
+**中转注入模式的边界：**
 
-1. 双击"Codex++ 管理工具"快捷方式，开始配置
-2. 可以看到，Codex++ 已经自动获取了 Codex 的位置和版本信息
-3. 点击左侧的"供应商配置"，点击右侧的"添加供应商"
+- 官方 ChatGPT/Codex 登录态继续负责 Codex App 的账号能力和插件入口
+- 中转配置只接管模型请求使用的 Base URL、Key 和模型名称
+- 清除 API 模式后应能回到官方登录态
 
-![Codex++ 管理工具](./images/codexpp-config-01.png)
-
-#### 步骤 3：填写供应商配置
-
-按照下图内容填好信息：
-
-- **名称：** DeepSeek
-- **接入模式：** 纯 API
-- **配置模型：** deepseek
-- **测试模型：** deepseek-v4-flash（从下方模型列表中选择一个即可）
-- **上下文大小：** 1000000（根据需要填写即可）
-- **压缩上下文大小：** 1000000（根据需要填写即可）
-- **Base URL：** https://api.deepseek.com
-- **Key：** 你的 DeepSeek API Key
-- **上游协议：** Chat Completions
-- **模型列表：** 填写 DeepSeek API Key 后点击"从上游获取"即可
-
-填写完成后点击"保存"。
-
-![供应商配置](./images/codexpp-provider-01.png)
-
-#### 步骤 4：启用配置
-
-找到新建的"DeepSeek"配置，点击右侧的"使用"（鼠标移动到配置栏时自动显示）。
-
-![启用配置](./images/codexpp-provider-02.png)
-
-#### 步骤 5：测试连接
-
-点击"使用"右侧的"发送 hi 测试"按钮，查看是否连通 DeepSeek，可以看到 HTTP 200 和回复内容，配置成功。
-
-![测试连接](./images/codexpp-test-01.png)
-
-### 4.3 使用增强的 Codex
-
-1. 双击 **Codex++** 快捷方式（不是 Codex++ 管理工具），打开增强的 Codex
-2. 可以看到，界面右上角显示了 Codex++ 并有绿点表示正常运行
-3. 对话框下方出现了 deepseek，可以切换选择 DeepSeek 的模型了
-
-![使用增强的 Codex](./images/codexpp-usage-01.png)
-
-### 4.4 诊断与日志
+### 4.3 诊断与日志
 
 遇到问题时，可使用管理工具的诊断功能：
 
@@ -362,8 +309,6 @@ auto_approve = false         # 是否自动批准命令执行
 | `~/.codex-session-delete/` | Codex++ 状态与日志 |
 | `~/.codex/backups_state/provider-sync` | Provider 同步备份 |
 
-> **重要：** `~/.codex/backups_state/provider-sync` 会自动备份切换前的 session metadata，切换供应商后旧会话仍然可见——这避免了"换个 API 之前的对话全没了"的灾难。
-
 ---
 
 ## 8. 故障排除
@@ -412,17 +357,6 @@ auto_approve = false         # 是否自动批准命令执行
 | 版本回退 | 在管理工具中查看历史版本，必要时手动安装旧版本 |
 | 更新冲突 | 关闭 Codex App 后再执行更新操作 |
 
-### 8.5 中转注入问题
-
-**现象：** 中转注入后模型请求失败或返回错误。
-
-| 问题 | 解决方法 |
-|------|----------|
-| 连接超时 | 检查 Base URL 是否正确，确保 API 服务可访问 |
-| 认证失败 | 检查 API Key 是否正确，是否过期 |
-| 模型不支持 | 确认所选模型在中转平台上可用 |
-| 协议不匹配 | 检查上游协议设置（Chat Completions vs Responses） |
-
 ---
 
 ## 附录：快速参考
@@ -445,12 +379,3 @@ auto_approve = false         # 是否自动批准命令执行
 | OpenAI Platform | [platform.openai.com](https://platform.openai.com) |
 | QQ 交流群 | 1103050832 |
 | Telegram 频道 | [t.me/CodexPlusPlus](https://t.me/CodexPlusPlus) |
-
----
-
-## 参考资料
-
-- [【2026最新】Codex++下载、安装和使用全流程图解](https://www.cnblogs.com/ganhuo1/p/20393852)
-- [CodexPlusPlus：Codex App 的外部增强启动器](https://txtmix.com/posts/tech/codexplusplus-launcher-injection-cox-enhancement/)
-- [Codex++ 的教程｜Codex增强版下载与使用指南](https://blog.csdn.net/weixin_41961749/article/details/161262799)
-- [Codex++ GitHub 仓库](https://github.com/BigPizzaV3/CodexPlusPlus)
