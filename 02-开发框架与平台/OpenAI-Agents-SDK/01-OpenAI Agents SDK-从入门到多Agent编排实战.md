@@ -84,7 +84,7 @@ agent = Agent(
 |------|------|------|
 | `name` | str | Agent 名称，用于标识和日志 |
 | `instructions` | str | 系统提示，定义 Agent 的行为 |
-| `model` | str | 使用的模型（默认 gpt-4o） |
+| `model` | str | 使用的模型（默认 gpt-5.4） |
 | `tools` | list | 可用的工具列表 |
 | `handoffs` | list | 可交接的目标 Agent |
 
@@ -632,13 +632,13 @@ async def process_batch(inputs: list[str]):
 simple_agent = Agent(
     name="简单任务",
     instructions="处理简单问题。",
-    model="gpt-4o-mini"  # 简单任务用便宜模型
+    model="gpt-4.1-nano"  # 简单任务用便宜模型
 )
 
 complex_agent = Agent(
     name="复杂任务",
     instructions="处理复杂推理。",
-    model="gpt-4o"  # 复杂任务用强模型
+    model="gpt-5.5"  # 复杂任务用强模型
 )
 ```
 
@@ -719,7 +719,7 @@ agent = Agent(
     name="Claude 助手",
     instructions="你是一个使用 Claude 模型的助手。",
     model=AnthropicChatCompletionsModel(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-6",
         api_key="sk-ant-xxx"
     )
 )
@@ -735,7 +735,7 @@ agent = Agent(
     name="Gemini 助手",
     instructions="你是一个使用 Gemini 模型的助手。",
     model=GoogleChatCompletionsModel(
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         api_key="AIzaSyxxx"
     )
 )
@@ -756,7 +756,7 @@ ollama_client = AsyncOpenAI(
 agent = Agent(
     name="本地助手",
     instructions="你是一个使用本地模型的助手。",
-    model="llama3"
+    model="llama4"
 )
 ```
 
