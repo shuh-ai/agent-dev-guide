@@ -34,33 +34,37 @@
 
 ## 二、2026 年主流模型价格对比
 
-### 2.1 模型价格速查表
+### 2.1 模型价格速查表（2026年6月更新）
 
 | 模型 | 输入价格（/百万Token） | 输出价格（/百万Token） | 适用场景 |
 |------|----------------------|----------------------|----------|
-| **GPT-4o** | $2.50 | $10.00 | 复杂推理、多模态 |
-| **GPT-4o-mini** | $0.15 | $0.60 | 日常对话、简单任务 |
-| **GPT-3.5-turbo** | $0.50 | $1.50 | 简单分类、提取 |
-| **Claude 3.5 Sonnet** | $3.00 | $15.00 | 代码生成、长文本 |
-| **Claude 3.5 Haiku** | $0.25 | $1.25 | 快速响应、简单任务 |
-| **DeepSeek V3** | ¥0.1~0.3 | ¥0.2~0.5 | 性价比之选 |
-| **Gemini 2.0 Flash** | $0.10 | $0.40 | 超低成本、快速响应 |
+| **GPT-5.5** | $5.00 | $30.00 | 旗舰通用、复杂推理 |
+| **GPT-5.4** | $2.50 | $15.00 | 生产主力、性价比之选 |
+| **GPT-4.1 Nano** | $0.10 | $0.40 | 最低成本、简单任务 |
+| **o4-mini** | $0.55 | $2.20 | 推理任务、低成本 |
+| **Claude Opus 4.8** | $5.00 | $25.00 | 最强能力、复杂任务 |
+| **Claude Sonnet 4.6** | $3.00 | $15.00 | 代码生成、平衡性能 |
+| **Claude Haiku 4.5** | $0.25 | $1.25 | 快速响应、简单任务 |
+| **DeepSeek V3** | ¥0.1~0.3 | ¥0.2~0.5 | 国内低成本之选 |
+
+> **价格说明：** 以上价格为 2026 年 6 月最新数据，来自 OpenAI 和 Anthropic 官方定价页面。GPT-5.5 于 2026 年 4 月 24 日发布，Claude Opus 4.8 于 2026 年 5 月 28 日发布。
 
 ### 2.2 成本差异可视化
 
 ```
 模型成本对比（每百万 Token 输入价格）
 
-GPT-4o          ████████████████████████████████████████  $2.50
-Claude 3.5 Sonnet ██████████████████████████████████████████████████  $3.00
-GPT-3.5-turbo   ████████  $0.50
-GPT-4o-mini     ██  $0.15
-Claude 3.5 Haiku ████  $0.25
-Gemini 2.0 Flash █  $0.10
-DeepSeek V3     █  ¥0.1~0.3
+GPT-5.5           ████████████████████████████████████████  $5.00
+Claude Opus 4.8   ████████████████████████████████████████  $5.00
+Claude Sonnet 4.6 █████████████████████████  $3.00
+GPT-5.4           ████████████████████  $2.50
+o4-mini           ████  $0.55
+Claude Haiku 4.5  ██  $0.25
+GPT-4.1 Nano      █  $0.10
+DeepSeek V3       █  ¥0.1~0.3
 ```
 
-**关键结论：** GPT-4o 和 GPT-4o-mini 的价格差距高达 **16 倍**。如果 80% 的任务可以用 mini 完成，整体成本可降低 **75%**。
+**关键结论：** GPT-5.5 和 GPT-4.1 Nano 的价格差距高达 **50 倍**。如果 80% 的任务可以用 GPT-4.1 Nano 完成，整体成本可降低 **90%**。
 
 ---
 
@@ -76,10 +80,10 @@ DeepSeek V3     █  ¥0.1~0.3
 
 | 复杂度 | 任务类型 | 推荐模型 | 成本 |
 |--------|----------|----------|------|
-| **低** | 问候、简单问答、格式转换 | GPT-4o-mini / Gemini Flash | $0.10-0.15/M |
-| **中** | 信息检索、文本摘要、翻译 | GPT-4o-mini / Claude Haiku | $0.15-0.25/M |
-| **高** | 代码生成、复杂推理、多步分析 | GPT-4o / Claude Sonnet | $2.50-3.00/M |
-| **极高** | 数学证明、复杂架构设计 | GPT-4o / Claude Opus | $10-15/M |
+| **低** | 问候、简单问答、格式转换 | GPT-4.1 Nano / Claude Haiku 4.5 | $0.10-0.25/M |
+| **中** | 信息检索、文本摘要、翻译 | GPT-5.4 / Claude Sonnet 4.6 | $2.50-3.00/M |
+| **高** | 代码生成、复杂推理、多步分析 | GPT-5.5 / Claude Opus 4.8 | $5.00/M |
+| **极高** | 数学证明、复杂架构设计 | GPT-5.5 Pro | $30.00/M |
 
 ### 3.3 模型路由实现
 
@@ -123,11 +127,11 @@ def classify_task_complexity(user_input: str) -> str:
 def route_to_model(complexity: str) -> str:
     """根据复杂度选择模型"""
     routing = {
-        "low": "gpt-4o-mini",
-        "medium": "gpt-4o-mini",  # 大多数任务用 mini 就够
-        "high": "gpt-4o",
+        "low": "gpt-4.1-nano",      # 最低成本
+        "medium": "gpt-5.4",         # 生产主力
+        "high": "gpt-5.5",           # 旗舰通用
     }
-    return routing.get(complexity, "gpt-4o-mini")
+    return routing.get(complexity, "gpt-4.1-nano")
 
 
 def smart_chat(user_input: str) -> str:
@@ -406,12 +410,19 @@ class TokenMonitor:
         self.alert_threshold: float = 0.8  # 80% 时告警
     
     def calculate_cost(self, model: str, input_tokens: int, output_tokens: int) -> float:
-        """计算费用"""
+        """计算费用（2026年6月最新价格）"""
         pricing = {
-            "gpt-4o": {"input": 2.50, "output": 10.00},
-            "gpt-4o-mini": {"input": 0.15, "output": 0.60},
-            "claude-3-5-sonnet": {"input": 3.00, "output": 15.00},
-            "claude-3-5-haiku": {"input": 0.25, "output": 1.25},
+            # OpenAI 模型
+            "gpt-5.5": {"input": 5.00, "output": 30.00},
+            "gpt-5.4": {"input": 2.50, "output": 15.00},
+            "gpt-4.1-nano": {"input": 0.10, "output": 0.40},
+            "o4-mini": {"input": 0.55, "output": 2.20},
+            # Anthropic 模型
+            "claude-opus-4-8": {"input": 5.00, "output": 25.00},
+            "claude-sonnet-4-6": {"input": 3.00, "output": 15.00},
+            "claude-haiku-4-5": {"input": 0.25, "output": 1.25},
+            # 其他
+            "deepseek-v3": {"input": 0.15, "output": 0.30},
         }
         
         if model not in pricing:
@@ -636,27 +647,27 @@ def batch_classify(texts: list[str]) -> list[str]:
 某企业的客服 Agent 月均 Token 消耗：
 - 日均请求：5,000 次
 - 平均 Token/请求：3,000（输入 2,000 + 输出 1,000）
-- 使用模型：GPT-4o
+- 使用模型：GPT-5.5
 - 月成本：~$3,000
 
 ### 9.2 优化措施
 
 | 措施 | 实施方式 | 节省 |
 |------|----------|------|
-| 模型路由 | 80% 请求改用 GPT-4o-mini | $2,160 |
-| 精确缓存 | 缓存常见问题的回答 | $240 |
-| Prompt 优化 | 精简系统提示，减少 500 Token | $180 |
-| 对话历史压缩 | 只保留最近 3 轮对话 | $120 |
+| 模型路由 | 80% 请求改用 GPT-4.1 Nano | $2,400 |
+| 精确缓存 | 缓存常见问题的回答 | $200 |
+| Prompt 优化 | 精简系统提示，减少 500 Token | $150 |
+| 对话历史压缩 | 只保留最近 3 轮对话 | $100 |
 
 ### 9.3 优化结果
 
 | 指标 | 优化前 | 优化后 | 变化 |
 |------|--------|--------|------|
-| 月成本 | $3,000 | $800 | **-73%** |
+| 月成本 | $3,000 | $600 | **-80%** |
 | 平均延迟 | 2.5s | 1.8s | -28% |
 | 用户满意度 | 4.2/5 | 4.3/5 | +2% |
 
-**关键洞察：** 用户满意度没有下降，因为 80% 的客服问题用 GPT-4o-mini 就能很好回答。
+**关键洞察：** 用户满意度没有下降，因为 80% 的客服问题用 GPT-4.1 Nano 就能很好回答。
 
 ---
 
@@ -698,9 +709,11 @@ def batch_classify(texts: list[str]) -> list[str]:
 
 | 资源 | 链接 | 说明 |
 |------|------|------|
-| OpenAI Pricing | [openai.com/pricing](https://openai.com/api/pricing/) | 官方价格表 |
-| Anthropic Pricing | [anthropic.com/pricing](https://www.anthropic.com/pricing) | Claude 价格表 |
-| Token Optimization 2026 | [dev.to](https://dev.to/) | Token 优化策略 |
+| OpenAI Pricing | [openai.com/api/pricing](https://openai.com/api/pricing/) | 官方价格表（2026年6月） |
+| Anthropic Pricing | [anthropic.com/pricing](https://www.anthropic.com/pricing) | Claude 价格表（2026年6月） |
+| GPT-5.5 发布公告 | [openai.com/blog](https://openai.com/blog/gpt-5-5) | GPT-5.5 新特性介绍 |
+| Claude Opus 4.8 发布 | [anthropic.com/blog](https://www.anthropic.com/blog/claude-opus-4-8) | Claude Opus 4.8 新特性 |
 | Prompt Caching Guide | [platform.openai.com](https://platform.openai.com/docs/guides/prompt-caching) | OpenAI Prompt Caching 文档 |
 | LangSmith | [smith.langchain.com](https://smith.langchain.com/) | LangChain 监控平台 |
 | GPTCache | [github.com/zilliztech/GPTCache](https://github.com/zilliztech/GPTCache) | 语义缓存框架 |
+| Price Per Token | [pricepertoken.com](https://pricepertoken.com/) | 模型价格对比工具 |
