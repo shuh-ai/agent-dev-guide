@@ -74,7 +74,7 @@ from agents import Agent
 agent = Agent(
     name="客服助手",
     instructions="你是一个专业的客服助手，帮助用户解决产品问题。",
-    model="gpt-4o"
+    model="deepseek-v4-flash"
 )
 ```
 
@@ -813,16 +813,3 @@ COPY . .
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
-
----
-
-## 十、参考资料
-
-| 资源 | 链接 | 说明 |
-|------|------|------|
-| 官方文档 | [openai.github.io/openai-agents-python](https://openai.github.io/openai-agents-python/) | SDK 完整文档 |
-| GitHub 仓库 | [github.com/openai/openai-agents-python](https://github.com/openai/openai-agents-python) | 源代码和示例 |
-| PyPI 包 | [pypi.org/project/openai-agents](https://pypi.org/project/openai-agents/) | 安装包 |
-| OpenAI 官方指南 | [platform.openai.com/docs/guides/agents](https://platform.openai.com/docs/guides/agents) | Agent 构建指南 |
-| Tracing Dashboard | [platform.openai.com/traces](https://platform.openai.com/traces) | 查看执行追踪 |
-| Swarm（前身） | [github.com/openai/swarm](https://github.com/openai/swarm) | 实验性框架 |

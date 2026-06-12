@@ -733,28 +733,9 @@ output {
 
 ### 6.1 架构设计
 
-```
-                    ┌─────────────────┐
-                    │   Load Balancer  │
-                    │   (Nginx/ALB)    │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              │              │              │
-        ┌─────┴─────┐  ┌────┴────┐  ┌─────┴─────┐
-        │ Agent Pod  │  │Agent Pod│  │ Agent Pod  │
-        │   (v1)     │  │  (v1)   │  │   (v1)     │
-        └─────┬─────┘  └────┬────┘  └─────┬─────┘
-              │              │              │
-              └──────────────┼──────────────┘
-                             │
-        ┌────────────────────┼────────────────────┐
-        │                    │                    │
-  ┌─────┴─────┐       ┌─────┴─────┐       ┌─────┴─────┐
-  │   Redis    │       │ PostgreSQL│       │  Vector   │
-  │  (Cache)   │       │  (State)  │       │    DB     │
-  └───────────┘       └───────────┘       └───────────┘
-```
+![高可用架构](./images/高可用架构.png)
+
+> ▲ 图6-1 Agent高可用架构：① Load Balancer（Nginx/ALB）→ ② 3个Agent Pod副本（v1）→ ③ 数据层（Redis缓存 / PostgreSQL状态 / Vector DB向量库）
 
 ### 6.2 故障恢复策略
 
@@ -1027,44 +1008,3 @@ class AutoScaler:
             new_replicas = max(1, current_replicas - 1)
             await self._scale_deployment(deployment_name, new_replicas)
 ```
-
----
-
-## 九、部署检查清单
-
-### 9.1 部署前检查
-
-- [ ] 所有测试通过
-- [ ] 安全扫描无高危漏洞
-- [ ] 环境变量配置正确
-- [ ] API Key 已设置且有效
-- [ ] 数据库迁移完成
-- [ ] 健康检查端点实现
-- [ ] 监控指标埋点完成
-- [ ] 日志格式规范化
-- [ ] 错误处理完善
-- [ ] 降级策略实现
-
-### 9.2 部署后验证
-
-- [ ] 服务正常启动
-- [ ] 健康检查通过
-- [ ] 监控数据正常
-- [ ] 日志正常输出
-- [ ] 核心功能测试
-- [ ] 性能基准测试
-- [ ] 告警规则验证
-- [ ] 回滚流程验证
-
----
-
-## 十、参考资料
-
-| 资源 | 链接 | 说明 |
-|------|------|------|
-| Docker 官方文档 | [docs.docker.com](https://docs.docker.com/) | 容器化指南 |
-| Kubernetes 文档 | [kubernetes.io/docs](https://kubernetes.io/docs/) | K8s 部署指南 |
-| Prometheus 文档 | [prometheus.io/docs](https://prometheus.io/docs/) | 监控配置 |
-| Grafana 文档 | [grafana.com/docs](https://grafana.com/docs/) | 可视化仪表盘 |
-| GitHub Actions | [docs.github.com/actions](https://docs.github.com/en/actions) | CI/CD 流水线 |
-| vLLM 部署指南 | [docs.vllm.ai](https://docs.vllm.ai/) | LLM 推理服务部署 |

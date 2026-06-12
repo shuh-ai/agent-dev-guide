@@ -703,34 +703,9 @@ def batch_classify(texts: list[str]) -> list[str]:
 
 ### 8.2 成本优化决策树
 
-```
-收到用户请求
-    │
-    ├── 是否为重复/相似查询？
-    │   ├── 是 → 返回缓存结果（节省 100%）
-    │   └── 否 → 继续
-    │
-    ├── 任务复杂度如何？
-    │   │
-    │   ├── 低（问候、简单问答、格式转换、分类）
-    │   │   └── 使用 DeepSeek V4 Flash（$0.14/$0.28）
-    │   │       节省 97%，性价比之王
-    │   │
-    │   ├── 中（信息检索、文本摘要、翻译、一般对话）
-    │   │   └── 使用 DeepSeek V4 Pro（$1.74/$3.48）
-    │   │       节省 65%，能力接近国际模型
-    │   │
-    │   └── 高（代码生成、复杂推理、数学证明、架构设计）
-    │       └── 继续 ↓
-    │
-    ├── 是否为实时任务？
-    │   ├── 否 → 使用 Batch API（节省 50%）
-    │   └── 是 → 继续
-    │
-    └── 使用国际旗舰模型
-        ├── 代码/Agent 任务 → Claude Opus 4.8（$5.00/$25.00）
-        └── 通用/推理任务 → GPT-5.5（$5.00/$30.00）
-```
+![成本优化决策树](./images/成本优化决策树.png)
+
+> ▲ 图8-2 成本优化决策树：① 用户请求 → ② 判断是否重复（是→缓存）→ ③ 判断复杂度（低→DeepSeek Flash / 中→DeepSeek Pro / 高→继续）→ ④ 判断是否实时（否→Batch API）→ ⑤ 国际旗舰模型（Claude Opus / GPT-5.5）
 
 **推荐策略总结：**
 
@@ -811,40 +786,3 @@ def batch_classify(texts: list[str]) -> list[str]:
 | **Helicone** | 代理层 | 零代码接入，自动记录所有请求 |
 | **Portkey** | 网关层 | 多 Provider 路由 + 成本优化 |
 | **自建监控** | 自定义 | 使用本文的 TokenMonitor 类 |
-
----
-
-## 十一、落地路线图
-
-### 第一阶段：立即生效（0-1周）
-
-- [ ] 接入 Token 监控，了解当前成本分布
-- [ ] 实现精确缓存，缓存高频查询
-- [ ] 精简 System Prompt，删除冗余内容
-
-### 第二阶段：快速见效（1-4周）
-
-- [ ] 实现模型路由，简单任务用 mini
-- [ ] 对话历史压缩
-- [ ] 设置预算告警
-
-### 第三阶段：深度优化（1-3个月）
-
-- [ ] 语义缓存
-- [ ] 批处理非实时任务
-- [ ] 多 Provider 路由（对比价格）
-
----
-
-## 参考资料
-
-| 资源 | 链接 | 说明 |
-|------|------|------|
-| OpenAI Pricing | [openai.com/api/pricing](https://openai.com/api/pricing/) | 官方价格表（2026年6月） |
-| Anthropic Pricing | [anthropic.com/pricing](https://www.anthropic.com/pricing) | Claude 价格表（2026年6月） |
-| GPT-5.5 发布公告 | [openai.com/blog](https://openai.com/blog/gpt-5-5) | GPT-5.5 新特性介绍 |
-| Claude Opus 4.8 发布 | [anthropic.com/blog](https://www.anthropic.com/blog/claude-opus-4-8) | Claude Opus 4.8 新特性 |
-| Prompt Caching Guide | [platform.openai.com](https://platform.openai.com/docs/guides/prompt-caching) | OpenAI Prompt Caching 文档 |
-| LangSmith | [smith.langchain.com](https://smith.langchain.com/) | LangChain 监控平台 |
-| GPTCache | [github.com/zilliztech/GPTCache](https://github.com/zilliztech/GPTCache) | 语义缓存框架 |
-| Price Per Token | [pricepertoken.com](https://pricepertoken.com/) | 模型价格对比工具 |
