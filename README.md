@@ -75,7 +75,8 @@
 
 - `RAG`
 - `Prompt Engineering`
-- 后续可扩展：上下文工程、多模态、记忆、工作流设计、评测与对齐
+- `上下文工程`
+- 后续可扩展：多模态、记忆、工作流设计、评测与对齐
 - `Agent`
 - `工具调用与MCP`
 - 后续可扩展：Prompt Engineering、上下文工程、多模态、记忆、工作流设计、评测与对齐
@@ -151,6 +152,10 @@
 
 - [01-Prompt设计：结构、技术与反模式](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Prompt%20Engineering/01-Prompt-%E8%AE%BE%E8%AE%A1%EF%BC%9A%E7%BB%93%E6%9E%84%E3%80%81%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%8F%8D%E6%A8%A1%E5%BC%8F.md)
 - [02-Prompt工程化：版本管理、评估与LangGraph实战](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/Prompt%20Engineering/02-Prompt-%E5%B7%A5%E7%A8%8B%E5%8C%96%EF%BC%9A%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E3%80%81%E8%AF%84%E4%BC%B0%E4%B8%8ELangGraph%E5%AE%9E%E6%88%98.md)
+
+#### 上下文工程
+
+- [01-上下文工程全景：从Prompt Engineering到Context Engineering](./01-%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B%E4%B8%93%E9%A2%98/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/01-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B%E5%85%A8%E6%99%AF%EF%BC%9A%E4%BB%8EPrompt%20Engineering%E5%88%B0Context%20Engineering.md)
 
 #### Harness Engineering
 
