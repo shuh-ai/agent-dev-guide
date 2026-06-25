@@ -102,9 +102,12 @@
 
 - 企业知识库问答系统端到端实战
 
-### `06-工程化与评测`
+### `06-工程前沿`
 
-- 预留给评测体系、可观测性、部署、成本控制、安全治理、数据闭环
+- 语义路由与 Mixture-of-Models
+- LLM 评测新格局
+- CLI Agentic Coding 工程实践
+- vLLM 2026 架构演进
 
 ## 仓库导读
 
@@ -211,6 +214,13 @@
 ### 项目实战与案例
 
 - [01-企业知识库问答系统端到端实战：从架构设计到生产部署](./05-%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E4%B8%8E%E6%A1%88%E4%BE%8B/01-%E4%BC%81%E4%B8%9A%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F%E7%AB%AF%E5%88%B0%E7%AB%AF%E5%AE%9E%E6%88%98-%E4%BB%8E%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%88%B0%E7%94%9F%E4%BA%A7%E9%83%A8%E7%BD%B2.md)
+
+### 工程前沿
+
+- [01-语义路由与Mixture-of-Models：vLLM Semantic Router深度解析](./06-%E5%B7%A5%E7%A8%8B%E5%89%8D%E6%B2%BF/01-%E8%AF%AD%E4%B9%89%E8%B7%AF%E7%94%B1%E4%B8%8EMixture-of-Models%EF%BC%9AvLLM%20Semantic%20Router%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.md)
+- [02-2026年LLM评测新格局：从饱和基准到持续活基准](./06-%E5%B7%A5%E7%A8%8B%E5%89%8D%E6%B2%BF/02-2026%E5%B9%B4LLM%E8%AF%84%E6%B5%8B%E6%96%B0%E6%A0%BC%E5%B1%80%EF%BC%9A%E4%BB%8E%E9%A5%B1%E5%92%8C%E5%9F%BA%E5%87%86%E5%88%B0%E6%8C%81%E7%BB%AD%E6%B4%BB%E5%9F%BA%E5%87%86.md)
+- [03-CLI Agentic Coding工程实践：从单Agent到多Agent协作](./06-%E5%B7%A5%E7%A8%8B%E5%89%8D%E6%B2%BF/03-CLI%20Agentic%20Coding%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5%EF%BC%9A%E4%BB%8E%E5%8D%95Agent%E5%88%B0%E5%A4%9AAgent%E5%8D%8F%E4%BD%9C.md)
+- [04-vLLM 2026架构演进：V1核心、推测解码与多模态推理](./06-%E5%B7%A5%E7%A8%8B%E5%89%8D%E6%B2%BF/04-vLLM%202026%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%EF%BC%9AV1%E6%A0%B8%E5%BF%83%E3%80%81%E6%8E%A8%E6%B5%8B%E8%A7%A3%E7%A0%81%E4%B8%8E%E5%A4%9A%E6%A8%A1%E6%80%81%E6%8E%A8%E7%90%86.md)
 
 ## 命名规则
 
