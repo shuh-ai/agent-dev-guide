@@ -2,7 +2,7 @@
 
 ![社区知识地图](./assets/readme/community-knowledge-map.png)
 
-这是笃行智元 `DXZY.AI` 社区面向大模型应用开发者持续建设的一份学习指南仓库。
+这是术核 AI `SHUH.AI` 社区面向大模型应用开发者持续建设的一份学习指南仓库。
 
 我们希望它不只是“资料收集目录”，而是一个围绕 `AI 应用开发`、`企业级 RAG`、`Agentic AI`、`工程化落地` 和 `项目交付` 逐步沉淀的方法库、资料索引和共学入口。
 
@@ -21,13 +21,13 @@
 
 ## 社区入口
 
-- [DXZY.AI GitHub 社区主页](https://github.com/dxzyai/agent-dev-guide)
-- [DXZY.AI 官网](https://dxzy.ai)
-- [DXZY.AI 课程体系](https://dxzy.ai/course)
+- [SHUH.AI GitHub 社区主页](https://github.com/dxzyai/agent-dev-guide)
+- [SHUH.AI 官网](https://SHUH.AI)
+- [SHUH.AI 课程体系](https://SHUH.AI/course)
 
 ## 社区介绍
 
-笃行智元是一个专注于 AI 大模型应用研发、企业级项目实践与人才培养的产研型社区。我们关注的不是“会不会调用模型”这一层，而是从需求理解、系统设计、工程实现、评估迭代到项目表达的完整能力链路。
+术核 AI 是一个专注于 AI 大模型应用研发、企业级项目实践与人才培养的产研型社区。我们关注的不是“会不会调用模型”这一层，而是从需求理解、系统设计、工程实现、评估迭代到项目表达的完整能力链路。
 
 这个仓库在社区内容体系中主要承担三类角色：
 
@@ -223,4 +223,4 @@
 - 面向求职作品集的项目表达模板
 - 中文 AI 工程化资料索引
 
-如果你也在构建 AI 应用、复盘项目、学习 RAG / Agent / 模型部署，欢迎关注 [DXZY.AI GitHub 社区主页](https://github.com/dxzyai/agent-dev-guide)。
+如果你也在构建 AI 应用、复盘项目、学习 RAG / Agent / 模型部署，欢迎关注 [SHUH.AI GitHub 社区主页](https://github.com/dxzyai/agent-dev-guide)。
